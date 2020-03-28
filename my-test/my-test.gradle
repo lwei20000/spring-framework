@@ -1,0 +1,7 @@
+description = "my-test"
+
+dependencies {
+    compile(project(":spring-context"))
+
+
+}
