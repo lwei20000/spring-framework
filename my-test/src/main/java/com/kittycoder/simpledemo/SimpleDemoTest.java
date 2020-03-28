@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Created by shucheng on 2019-6-29 下午 20:42
+ * 梁威测试文件
  */
 public class SimpleDemoTest {
 
