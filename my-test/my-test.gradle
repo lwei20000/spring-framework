@@ -2,6 +2,6 @@ description = "my-test"
 
 dependencies {
     compile(project(":spring-context"))
-
+    compile(project(":spring-beans"))
 
 }
