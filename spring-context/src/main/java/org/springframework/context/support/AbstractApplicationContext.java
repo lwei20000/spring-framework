@@ -519,6 +519,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+			// obtainFreshBeanFactory()方法中调用了AbstractRefreshableApplicationContext.refreshBeanFactory()的容器初始化方法。
+			// refreshBeanFactory()方法接口定义在AbstractApplicationContext类，由AbstractRefreshableApplicationContext子类负责实现。
+			// 从类结构图上看，new ClassPathXmlApplicationContext的过程中，AbstractRefreshableApplicationContext作为其父类也被创建。
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -634,6 +637,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
+		// 在这个方法里面完成了容器初始化。
+		// AbstractRefreshableApplicationContext子类里面进行了实现。
 		refreshBeanFactory();
 		return getBeanFactory();
 	}

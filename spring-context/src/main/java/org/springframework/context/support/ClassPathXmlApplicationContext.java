@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * Standalone XML application context, taking the context definition files
  * from the class path, interpreting plain paths as class path resource names
  * that include the package path (e.g. "mypackage/myresource.txt"). Useful for
- * test harnesses as well as for application contexts embedded within JARs.
+ * test harnesses(测试框架) as well as for application contexts embedded within JARs.
  *
  * <p>The config location defaults can be overridden via {@link #getConfigLocations},
  * Config locations can either denote concrete files like "/myfiles/context.xml"
@@ -141,6 +141,9 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 		super(parent);
 		setConfigLocations(configLocations);
 		if (refresh) {
+			// 由类图可以看出，AbstractApplicationContext类完成主要工作。
+			// 在本类的父类AbstractRefreshableApplicationContext.refreshBeanFactory()方法完成容器的初始化，它在哪儿被调用的呢？
+			// 答：在refresh()中的obtainFreshBeanFactory
 			refresh();
 		}
 	}
