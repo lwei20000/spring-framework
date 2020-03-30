@@ -10,10 +10,21 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class SimpleDemoTest {
 
 	public static void main(String[] args) {
+
+		// 【一、读取配置文件，生成bean工厂】
+		//
 		ApplicationContext ac = new ClassPathXmlApplicationContext("com/kittycoder/simpledemo/spring-student.xml");
+
+		// 【二、从ApplicationContext中取得bean】
+		//
 		Teacher teacher = (Teacher) ac.getBean("teacher");
 		System.out.println("=====================" + teacher);
 
+
+
+
+
+		// =========================================================================================================================
 //		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("beanFactoryTest.xml"));
 //		Teacher teacher = (Teacher) bf.getBean("teacher");
 //		System.out.println("=====================" + teacher);
