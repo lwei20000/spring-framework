@@ -446,14 +446,17 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		return this.documentLoader.loadDocument(
 				// (1)
 				inputSource,
+
 				// (2)
 				// EntityResolver是做什么的呢？
-				//
 				getEntityResolver(),
+
 				// (3)
 				this.errorHandler,
+
 				// (4)判定当前配置文档，是使用DTD还是使用XDS做验证
 				getValidationModeForResource(resource),
+
 				// (5)
 				isNamespaceAware());
 
