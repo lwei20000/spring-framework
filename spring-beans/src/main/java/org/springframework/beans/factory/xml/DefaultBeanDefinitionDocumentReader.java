@@ -93,6 +93,8 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	@Override
 	public void registerBeanDefinitions(Document doc, XmlReaderContext readerContext) {
 		this.readerContext = readerContext;
+
+		// 干活的方法
 		doRegisterBeanDefinitions(doc.getDocumentElement());
 	}
 
@@ -145,8 +147,13 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			}
 		}
 
+		// 空方法：留给子类实现
 		preProcessXml(root);
+
+		// 解析
 		parseBeanDefinitions(root, this.delegate);
+
+		// 空方法：留给子类实现
 		postProcessXml(root);
 
 		this.delegate = parent;
@@ -173,9 +180,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				if (node instanceof Element) {
 					Element ele = (Element) node;
 					if (delegate.isDefaultNamespace(ele)) {
+
+						// 默认标签的解析
 						parseDefaultElement(ele, delegate);
 					}
 					else {
+						// 自定义标签的解析
 						delegate.parseCustomElement(ele);
 					}
 				}

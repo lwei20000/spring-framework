@@ -334,6 +334,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 				if (encodedResource.getEncoding() != null) {
 					inputSource.setEncoding(encodedResource.getEncoding());
 				}
+
+				// =====================================>干活的方法doLoadBeanDefinitions。<=====================================
 				return doLoadBeanDefinitions(inputSource, encodedResource.getResource());
 			}
 			finally {
@@ -386,12 +388,20 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see #doLoadDocument
 	 * @see #registerBeanDefinitions
 	 */
-	protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
-			throws BeanDefinitionStoreException {
-
+	protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource) throws BeanDefinitionStoreException {
 		try {
+
+			// (一、)把文件转化为ducument对象
+			// 这里取得XML文件的document对象，这个解析过程由this.documentLoader完成。
+			// 方法里面完成以下几件事：
+			// 1、this.documentLoader.loadDocument() 方法进行配置文件的读取。
+			// 2、getValidationModeForResource()方法取得XDS or DTD配置。
+			//
 			Document doc = doLoadDocument(inputSource, resource);
+
+			// （二、）当把文件转化为ducument对象后，加下来提取、注册bean。
 			int count = registerBeanDefinitions(doc, resource);
+
 			if (logger.isDebugEnabled()) {
 				logger.debug("Loaded " + count + " bean definitions from " + resource);
 			}
@@ -432,8 +442,22 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see DocumentLoader#loadDocument
 	 */
 	protected Document doLoadDocument(InputSource inputSource, Resource resource) throws Exception {
-		return this.documentLoader.loadDocument(inputSource, getEntityResolver(), this.errorHandler,
-				getValidationModeForResource(resource), isNamespaceAware());
+		// Reader ======================> Loader
+		return this.documentLoader.loadDocument(
+				// (1)
+				inputSource,
+				// (2)
+				// EntityResolver是做什么的呢？
+				//
+				getEntityResolver(),
+				// (3)
+				this.errorHandler,
+				// (4)判定当前配置文档，是使用DTD还是使用XDS做验证
+				getValidationModeForResource(resource),
+				// (5)
+				isNamespaceAware());
+
+		// EntityResolver参数：getEntityResolver()创建EntityResolver
 	}
 
 	/**
@@ -449,10 +473,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		if (validationModeToUse != VALIDATION_AUTO) {
 			return validationModeToUse;
 		}
+
+
 		int detectedMode = detectValidationMode(resource);
 		if (detectedMode != VALIDATION_AUTO) {
 			return detectedMode;
 		}
+
 		// Hmm, we didn't get a clear indication... Let's assume XSD,
 		// since apparently no DTD declaration has been found up until
 		// detection stopped (before finding the document's root tag).
@@ -487,6 +514,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		}
 
 		try {
+			// detectValidationMode()方法判定文件头部是否用XDS或者DTD进行校验。
 			return this.validationModeDetector.detectValidationMode(inputStream);
 		}
 		catch (IOException ex) {
@@ -509,9 +537,17 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
+		// 说明：
+		// BeanDefinition的载入分为两个部分：
+		// (1)首先通过调用XML的解析器得到document对象，但这些ducument对象并没有按照Spring的Bean规则进行解析。
+		// (2)然后在完成通用的XML解析后，才按照Spring的Bean规则进行解析。这个解析过程就是通过此处的documentReader完成的。
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+
 		int countBefore = getRegistry().getBeanDefinitionCount();
+
+		// 上面注释中的第(2)步的过程就是在此处进行的。=========================>DefaultBeanDefinitionDocumentReader
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
+
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
 
