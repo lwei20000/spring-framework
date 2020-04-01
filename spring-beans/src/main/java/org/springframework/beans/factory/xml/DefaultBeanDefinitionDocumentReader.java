@@ -198,16 +198,23 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
 		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+
+			// 解析import：庞大工程中通常xml配置文件分模块写，通过import进行汇总组合的。
 			importBeanDefinitionResource(ele);
 		}
 		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+
+			// 解析alias：
 			processAliasRegistration(ele);
 		}
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+
+			// 解析bean
 			processBeanDefinition(ele, delegate);
 		}
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
-			// recurse
+
+			// recurse(递归)
 			doRegisterBeanDefinitions(ele);
 		}
 	}
@@ -313,10 +320,17 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * and registering it with the registry.
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
+
+		// 1、解析beanDefinition
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
+
 		if (bdHolder != null) {
+			// 2、对beandefinition进行装饰。为什么要装饰？
+			//    答：在默认的bean标签中，使用了自定义的属性的情况下，执行此方法。
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
+
+				// 3、工具类BeanDefinitionReaderUtils中注册beandefinition。
 				// Register the final decorated instance.
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
@@ -324,6 +338,9 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 				getReaderContext().error("Failed to register bean definition with name '" +
 						bdHolder.getBeanName() + "'", ele, ex);
 			}
+
+			// 通知监听器，解析和注册工作已经完成。
+			// 这里只为扩展，暂时spring对这块没有做任何处理。
 			// Send registration event.
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}

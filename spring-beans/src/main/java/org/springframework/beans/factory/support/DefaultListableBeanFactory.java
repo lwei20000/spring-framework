@@ -913,6 +913,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				// 这是注册前的最后一次校验
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -921,8 +922,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		// 所谓注册：就是吧bean的配置放到全局变量this.beanDefinitionMap中。
+		// 这里this.beanDefinitionMap是全局变量，访问的时候存在同步访问控制的要求：
+		// 老版本的spring这个地方通过synchronized关键字同步访问。
+		// 这里5.0.x版本，this.beanDefinitionMap定义为了ConcurrentHashMap同步容器类，所以不需要加同步控制。
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		if (existingDefinition != null) {
+			// 如果对应的beanName已经被注册，并且在配置中配置了bean不允许被覆盖，就抛出异常。
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
@@ -948,12 +954,16 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							"] with [" + beanDefinition + "]");
 				}
 			}
+
+			// 这是beanName已经被注册的情况下，覆盖。
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
+				// 不能再修改启动时间集合元素(为了稳定的迭代)
 				synchronized (this.beanDefinitionMap) {
+					// 注册
 					this.beanDefinitionMap.put(beanName, beanDefinition);
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
@@ -963,7 +973,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				}
 			}
 			else {
-				// Still in startup registration phase
+				// Still in startup registration phase(仍在启动注册阶段)
+				// 注册
 				this.beanDefinitionMap.put(beanName, beanDefinition);
 				this.beanDefinitionNames.add(beanName);
 				removeManualSingletonName(beanName);
@@ -971,6 +982,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			this.frozenBeanDefinitionNames = null;
 		}
 
+		// 重置所有beanName对应的缓存
 		if (existingDefinition != null || containsSingleton(beanName)) {
 			resetBeanDefinition(beanName);
 		}

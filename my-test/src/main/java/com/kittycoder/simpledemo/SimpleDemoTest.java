@@ -12,7 +12,13 @@ public class SimpleDemoTest {
 	public static void main(String[] args) {
 
 		// 【一、读取配置文件，生成bean工厂】
-		//
+		// ClassPathXmlApplicationContext
+		// -->AbstractXmlApplicationContext
+		// -->AbstractRefreshableConfigApplicationContext
+		// -->AbstractRefreshableApplicationContext
+		// -->AbstractApplicationContext(大类)
+		// -->DefaultResourceLoader
+		// -->ResourceLoader(接口)
 		ApplicationContext ac = new ClassPathXmlApplicationContext("com/kittycoder/simpledemo/spring-student.xml");
 
 		// 【二、从ApplicationContext中取得bean】

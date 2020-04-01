@@ -396,7 +396,6 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			// 方法里面完成以下几件事：
 			// 1、this.documentLoader.loadDocument() 方法进行配置文件的读取。
 			// 2、getValidationModeForResource()方法取得XDS or DTD配置。
-			//
 			Document doc = doLoadDocument(inputSource, resource);
 
 			// （二、）当把文件转化为ducument对象后，加下来提取、注册bean。
@@ -544,10 +543,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		// BeanDefinition的载入分为两个部分：
 		// (1)首先通过调用XML的解析器得到document对象，但这些ducument对象并没有按照Spring的Bean规则进行解析。
 		// (2)然后在完成通用的XML解析后，才按照Spring的Bean规则进行解析。这个解析过程就是通过此处的documentReader完成的。
+
+
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
-
 		int countBefore = getRegistry().getBeanDefinitionCount();
-
 		// 上面注释中的第(2)步的过程就是在此处进行的。=========================>DefaultBeanDefinitionDocumentReader
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 
