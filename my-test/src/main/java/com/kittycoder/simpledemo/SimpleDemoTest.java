@@ -11,6 +11,7 @@ public class SimpleDemoTest {
 
 	public static void main(String[] args) {
 
+		// test
 		// 【一、读取配置文件，生成bean工厂】
 		// ClassPathXmlApplicationContext
 		// -->AbstractXmlApplicationContext
