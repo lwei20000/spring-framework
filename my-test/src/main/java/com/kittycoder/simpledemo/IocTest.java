@@ -7,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * 梁威测试文件(lw)
  */
-public class SimpleDemoTest {
+public class IocTest {
 
 	public static void main(String[] args) {
 
