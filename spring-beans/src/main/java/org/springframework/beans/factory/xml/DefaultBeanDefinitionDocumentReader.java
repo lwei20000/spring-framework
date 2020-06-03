@@ -197,24 +197,24 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	}
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
-		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
 
-			// 解析import：庞大工程中通常xml配置文件分模块写，通过import进行汇总组合的。
+		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+			// 对import标签的处理（庞大工程中通常xml配置文件分模块写，通过import进行汇总组合的）
 			importBeanDefinitionResource(ele);
 		}
-		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
 
-			// 解析alias：
+		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+			// 对alias标签的处理：
 			processAliasRegistration(ele);
 		}
-		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
 
-			// 解析bean
+		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+			// 对bean标签的处理（最重要）
 			processBeanDefinition(ele, delegate);
 		}
-		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
 
-			// recurse(递归)
+		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
+			// 对beans标签的处理
 			doRegisterBeanDefinitions(ele);
 		}
 	}
@@ -321,27 +321,23 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
 
-		// 1、解析beanDefinition
+		// 1、首先委托 BeanDefinitionDelegate 类的parseBeanDefinitionElement方法进行元素解析，返回BeanDefinitionHolder的bdHolder。
+		//    进过这个方法之后，bdHolder实例已经包含我们配置文件中配置的各种属性了，例如class、name、id、alias之类的属性。
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 
 		if (bdHolder != null) {
-			// 2、对beandefinition进行装饰。为什么要装饰？
-			//    答：在默认的bean标签中，使用了自定义的属性的情况下，执行此方法。
+
+			// 2、对beandefinition进行装饰。为什么要装饰？ 答：在默认的bean标签中，使用了自定义的属性的情况下，执行此方法。
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
+
 			try {
-
-				// 3、工具类BeanDefinitionReaderUtils中注册beandefinition。
-				// Register the final decorated instance.
+				// 3、解析完成后，需要对解析后的bdHolder进行注册，同样，注册操作委托给了BeanDefinitionReaderUtils.registerBeanDefinition方法。
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
-			}
-			catch (BeanDefinitionStoreException ex) {
-				getReaderContext().error("Failed to register bean definition with name '" +
-						bdHolder.getBeanName() + "'", ele, ex);
+			} catch (BeanDefinitionStoreException ex) {
+				getReaderContext().error("Failed to register bean definition with name '" + bdHolder.getBeanName() + "'", ele, ex);
 			}
 
-			// 通知监听器，解析和注册工作已经完成。
-			// 这里只为扩展，暂时spring对这块没有做任何处理。
-			// Send registration event.
+			// 4、发出响应事件，通知相关的监听器，这个bean已经加载完成了。
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}

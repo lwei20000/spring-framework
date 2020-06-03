@@ -106,8 +106,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
 	private boolean namespaceAware = false;
 
-	private Class<? extends BeanDefinitionDocumentReader> documentReaderClass =
-			DefaultBeanDefinitionDocumentReader.class;
+	private Class<? extends BeanDefinitionDocumentReader> documentReaderClass = DefaultBeanDefinitionDocumentReader.class;
 
 	private ProblemReporter problemReporter = new FailFastProblemReporter();
 
@@ -302,6 +301,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	@Override
 	public int loadBeanDefinitions(Resource resource) throws BeanDefinitionStoreException {
+		// EncodedResource的作用是什么呢？
+		// 用于对资源文件的编码进行处理。主要作用是getReader()方法返回输入流。
 		return loadBeanDefinitions(new EncodedResource(resource));
 	}
 
@@ -391,14 +392,12 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource) throws BeanDefinitionStoreException {
 		try {
 
-			// (一、)把文件转化为ducument对象
-			// 这里取得XML文件的document对象，这个解析过程由this.documentLoader完成。
-			// 方法里面完成以下几件事：
-			// 1、this.documentLoader.loadDocument() 方法进行配置文件的读取。
-			// 2、getValidationModeForResource()方法取得XDS or DTD配置。
+			// 2.6 获取对XML文件的验证模式
+
+			// 2.7 获取document
 			Document doc = doLoadDocument(inputSource, resource);
 
-			// （二、）当把文件转化为ducument对象后，加下来提取、注册bean。
+			// 2.8 解析\注册BeanDefinition
 			int count = registerBeanDefinitions(doc, resource);
 
 			if (logger.isDebugEnabled()) {
@@ -539,17 +538,21 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 * @see BeanDefinitionDocumentReader#registerBeanDefinitions
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
-		// 说明：
-		// BeanDefinition的载入分为两个部分：
-		// (1)首先通过调用XML的解析器得到document对象，但这些ducument对象并没有按照Spring的Bean规则进行解析。
-		// (2)然后在完成通用的XML解析后，才按照Spring的Bean规则进行解析。这个解析过程就是通过此处的documentReader完成的。
 
 
+		// 使用 DefaultBeanDefinitionDocumentReader 实例化BeanDefinitionDocumentReader
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
+
+		// 将环境变量设置其中
+		// none
+
+		// 记录统计前BeanDefinition的加载个数
 		int countBefore = getRegistry().getBeanDefinitionCount();
-		// 上面注释中的第(2)步的过程就是在此处进行的。=========================>DefaultBeanDefinitionDocumentReader
+
+		// 加载及注册bean
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 
+		// 记录本次加载的BeanDefinition个数
 		return getRegistry().getBeanDefinitionCount() - countBefore;
 	}
 

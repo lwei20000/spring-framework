@@ -49,8 +49,10 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 	@Override
 	public void registerAlias(String name, String alias) {
+
 		Assert.hasText(name, "'name' must not be empty");
 		Assert.hasText(alias, "'alias' must not be empty");
+
 		synchronized (this.aliasMap) {
 			// 如果beanName与alias相同的话不记录alias，并删除对应的alias
 			if (alias.equals(name)) {
@@ -81,6 +83,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 
 				// 注册别名
 				this.aliasMap.put(alias, name);
+
 				if (logger.isTraceEnabled()) {
 					logger.trace("Alias definition '" + alias + "' registered for name '" + name + "'");
 				}

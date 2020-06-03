@@ -913,7 +913,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
-				// 这是注册前的最后一次校验
+				/**
+				 * 这是注册前的最后一次校验,这里的校验不同于之前的XML文件校验
+				 * 这里主要是对于AbstractBeanDefinition属性中的methodOverrides校验，
+				 * 校验methodOverrides是否与工厂方法并存或者methodOverrides对应的方法根本不存在。
+				 */
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -927,7 +931,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		// 老版本的spring这个地方通过synchronized关键字同步访问。
 		// 这里5.0.x版本，this.beanDefinitionMap定义为了ConcurrentHashMap同步容器类，所以不需要加同步控制。
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
+
+		// 已经注册过的情况下：
 		if (existingDefinition != null) {
+
 			// 如果对应的beanName已经被注册，并且在配置中配置了bean不允许被覆盖，就抛出异常。
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
@@ -954,10 +961,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 							"] with [" + beanDefinition + "]");
 				}
 			}
-
-			// 这是beanName已经被注册的情况下，覆盖。
+			// 这是beanName已经被注册的情况下，并且允许被覆盖的情况下，进行覆盖。
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
+
+		// 没有被注册过的情况下：
 		else {
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
