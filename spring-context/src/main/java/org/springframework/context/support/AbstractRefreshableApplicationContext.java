@@ -127,12 +127,16 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			closeBeanFactory();
 		}
 		try {
-			// 创建beanFactory。返回一个DefaultListableBeanFactory。所以IOC容器的对象就是DefaultListableBeanFactory。
+			// 创建beanFactory。
+			// 返回一个DefaultListableBeanFactory。所以IOC容器的对象就是DefaultListableBeanFactory。
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
+
+			// 吧DefaultListableBeanFactory进行个性化定制（boolean重载，boolean循环依赖）
 			customizeBeanFactory(beanFactory);
 
-			// 载入beanFactory
+			// 载入beanFactory。
+			// 这是一个核心方法===加载bean的定义信息。
 			loadBeanDefinitions(beanFactory);
 
 			// 设置beanFactory
