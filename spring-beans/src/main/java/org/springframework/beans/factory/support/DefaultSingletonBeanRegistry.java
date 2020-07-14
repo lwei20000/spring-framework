@@ -218,14 +218,19 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+
+				// 进行创建状态的添加  判断是否存在无法解决的循环依赖   存在抛异常
 				beforeSingletonCreation(beanName);
+				// 标记
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
 				if (recordSuppressedExceptions) {
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
+					// singletonFactory 生成bean
 					singletonObject = singletonFactory.getObject();
+					// 标记置为true
 					newSingleton = true;
 				}
 				catch (IllegalStateException ex) {
@@ -250,6 +255,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					}
 					afterSingletonCreation(beanName);
 				}
+
+				// bean创建完成之后，放入单例对象池中。
+				// this.singletonObjects.put(beanName, singletonObject);
+				// this.singletonFactories.remove(beanName);
+				// this.earlySingletonObjects.remove(beanName);
+				// this.registeredSingletons.add(beanName);
 				if (newSingleton) {
 					addSingleton(beanName, singletonObject);
 				}

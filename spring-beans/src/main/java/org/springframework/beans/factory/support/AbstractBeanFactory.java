@@ -257,6 +257,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		 * 吧ObjectFactory加入到缓存中，一旦下一个bean创建的时候依赖上了这个bean则直接使用ObjectFactory。
 		 */
 		// 直接尝试从缓存获取 或者singletonFactories中的ObjectFactory中获取。
+		// 一般的bean到这个方法，返回是空。
 		Object sharedInstance = getSingleton(beanName);
 
 		if (sharedInstance != null && args == null) {
@@ -269,10 +270,10 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.trace("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
-
 			// 返回对应的实例
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
+
 		else {
 			// 只有单例的情况，才会需要解决循环依赖（单例情况下才可能解决）。
 			// 在原型的情况下，解决不了，直接抛出异常。
@@ -304,11 +305,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 			}
 
 
+
 			// 如果不是仅仅做类型检查，则是要创建bean，这里要进行记录。记录到this.alreadyCreated这个map中。
 			if (!typeCheckOnly) {
+				// 标记bean要创建了。
 				markBeanAsCreated(beanName);
 			}
 
+			// 创建bean
 			try {
 				// 将存储XML配置文件的GernericBeanDefinition转化为RootBeanDefinition，如果指定BeanName是子bean的话同时合并父类的相关属性。
 				final RootBeanDefinition mbd = getMergedLocalBeanDefinition(beanName);
@@ -340,8 +344,11 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				// singleton模式的创建。
 				if (mbd.isSingleton()) {
 					// lambda表达式传入的是工厂。
+					// DefaultSingletonBeanRegistry#getSingleton
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							//
+							// AbstractAutowireCapableBeanFactory#createBean
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {
@@ -352,6 +359,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 							throw ex;
 						}
 					});
+					// beanFactory factoryBean的不同
 					bean = getObjectForBeanInstance(sharedInstance, name, beanName, mbd);
 				}
 
@@ -1803,6 +1811,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected Object getObjectForBeanInstance(
 			Object beanInstance, String name, String beanName, @Nullable RootBeanDefinition mbd) {
 
+		// 如果name是factoryBean类型的，同时是“&”开头，返回普通bean。
 		// Don't let calling code try to dereference the factory if the bean isn't a factory.
 		if (BeanFactoryUtils.isFactoryDereference(name)) {
 			if (beanInstance instanceof NullBean) {

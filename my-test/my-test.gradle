@@ -3,5 +3,7 @@ description = "my-test"
 dependencies {
     compile(project(":spring-context"))
     compile(project(":spring-beans"))
+    compile(project(":spring-tx"))
+
 
 }
