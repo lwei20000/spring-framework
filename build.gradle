@@ -1,4 +1,10 @@
 buildscript {
+
+	// 默认的包下载地址太慢，使用阿里的镜像
+	repositories {
+		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+	}
+
 	dependencies {
 		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.16'
 		classpath 'io.spring.asciidoctor:spring-asciidoctor-extensions:0.1.3.RELEASE'
