@@ -15,7 +15,8 @@ public class IocTest {
 		ProxyFactory pf = new ProxyFactory(target);
 		//3.装配Advice
 		pf.addAdvice(new SecurityInterceptor());
-		//pf.addAdvice(new LoggerBeforeAdvice());
+		pf.addAdvice(new LoggerBeforeAdvice());
+		//4.装配advisor
 		pf.addAdvisor(new DefaultPointcutAdvisor(new LoggerBeforeAdvice()));
 		//4.获取代理对象
 		UserService proxy =(UserService)pf.getProxy();
