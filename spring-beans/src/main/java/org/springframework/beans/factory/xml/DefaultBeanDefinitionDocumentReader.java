@@ -209,7 +209,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
-			// 对bean标签的处理（最重要）
+			// 对bean标签的处理（============最重要============）
 			processBeanDefinition(ele, delegate);
 		}
 
@@ -321,23 +321,23 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 */
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
 
-		// 1、首先委托 BeanDefinitionDelegate 类的parseBeanDefinitionElement方法进行元素解析，返回BeanDefinitionHolder的bdHolder。
-		//    进过这个方法之后，bdHolder实例已经包含我们配置文件中配置的各种属性了，例如class、name、id、alias之类的属性。
+		/**BeanDefinitionHolder是BeanDefinition的封装类，封装了BeanDefinition，Bean的名字和别名。用它来完成向IoC容器的注册。
+		   得到这个BeanDefinitionHolder就意味着BeanDefinition是通过delegate对XML元素的信息按照Spring的Bean规则进行解析得到的**/
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 
 		if (bdHolder != null) {
 
-			// 2、对beandefinition进行装饰。为什么要装饰？ 答：在默认的bean标签中，使用了自定义的属性的情况下，执行此方法。
+			// 对beandefinition进行装饰。为什么要装饰？ 答：在默认的bean标签中，使用了自定义的属性的情况下，执行此方法。
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 
 			try {
-				// 3、解析完成后，需要对解析后的bdHolder进行注册，同样，注册操作委托给了BeanDefinitionReaderUtils.registerBeanDefinition方法。
+				// ==========向IoC注册===========
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			} catch (BeanDefinitionStoreException ex) {
 				getReaderContext().error("Failed to register bean definition with name '" + bdHolder.getBeanName() + "'", ele, ex);
 			}
 
-			// 4、发出响应事件，通知相关的监听器，这个bean已经加载完成了。
+			// 在BeanDefinition向IoC容器组册完成后，发送消息。
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}

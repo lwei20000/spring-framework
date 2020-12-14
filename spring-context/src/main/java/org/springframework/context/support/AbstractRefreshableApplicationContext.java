@@ -122,21 +122,26 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+		// 这里判断，如果已经建立了BeanFactory，则销毁并关闭改BeanFactory
 		if (hasBeanFactory()) {
 			destroyBeans();
 			closeBeanFactory();
 		}
 		try {
-			// 创建beanFactory。
-			// 返回一个DefaultListableBeanFactory。所以IOC容器的对象就是DefaultListableBeanFactory。
+			// 下列的过程与编程式的方法来使用IOC容器（XmlBeanFactory）的过程非常类似：
+			// 1、创建IoC配置文件的抽象资源 res
+			// 2、创建IoC容器 factory
+			// 3、创建一个载入器 reader = reader(factory)
+			// 4、从定义好的资源位置读入配置信息：reader.loadBeanDefinition(res)
+
+			// 创建Ioc容器。这里使用的是DefaultListableBeanFactory
+			// DefaultListableBeanFactory是经常要用到的一个IoC容器的实现，它包含了IoC容器所具备的重要功能，是在很多地方会用到的容器系列中的一个基本产品。
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
+			customizeBeanFactory(beanFactory); // 吧DefaultListableBeanFactory进行个性化定制（boolean重载，boolean循环依赖）
 
-			// 吧DefaultListableBeanFactory进行个性化定制（boolean重载，boolean循环依赖）
-			customizeBeanFactory(beanFactory);
-
-			// 载入beanFactory。
-			// 这是一个核心方法===加载bean的定义信息。
+			// 启动对BeanDefinition的载入。
+			// 这里调用的loadBeanDefinitions实际上是一个抽象方法，实际的载入过程发生在哪里呢？在子类AbstractXmlApplicationContext
 			loadBeanDefinitions(beanFactory);
 
 			// 设置beanFactory

@@ -328,6 +328,8 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throw new BeanDefinitionStoreException(
 					"Detected cyclic loading of " + encodedResource + " - check your import definitions!");
 		}
+
+		// 这里得到XML文件，并得到IO的inputStream准备进行读取
 		try {
 			InputStream inputStream = encodedResource.getResource().getInputStream();
 			try {
@@ -392,12 +394,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource) throws BeanDefinitionStoreException {
 		try {
 
-			// 2.6 获取对XML文件的验证模式
-
-			// 2.7 获取document
 			Document doc = doLoadDocument(inputSource, resource);
 
-			// 2.8 解析\注册BeanDefinition
+			// 这里启动的是对BeanDefinition解析的详细过程，这个解析会使用Spring的Bean配置规则，是我们下面要详细讲解的内容。
 			int count = registerBeanDefinitions(doc, resource);
 
 			if (logger.isDebugEnabled()) {
@@ -539,17 +538,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 	 */
 	public int registerBeanDefinitions(Document doc, Resource resource) throws BeanDefinitionStoreException {
 
-
-		// 使用 DefaultBeanDefinitionDocumentReader 实例化BeanDefinitionDocumentReader
+		// 这里得到BeanDefinitionDocumentReader来对XML的BeanDefinition进行解析
 		BeanDefinitionDocumentReader documentReader = createBeanDefinitionDocumentReader();
-
-		// 将环境变量设置其中
-		// none
 
 		// 记录统计前BeanDefinition的加载个数
 		int countBefore = getRegistry().getBeanDefinitionCount();
 
-		// 加载及注册bean
+		// 具体的解析过程在registerBeanDefinitions中
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 
 		// 记录本次加载的BeanDefinition个数

@@ -157,12 +157,12 @@ public abstract class BeanDefinitionReaderUtils {
 	 * @param registry the bean factory to register with
 	 * @throws BeanDefinitionStoreException if registration failed
 	 */
-	public static void registerBeanDefinition(
-			BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
-			throws BeanDefinitionStoreException {
+	public static void registerBeanDefinition(BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry) throws BeanDefinitionStoreException {
 
 		// 使用beanName做唯一标识注册
 		String beanName = definitionHolder.getBeanName();
+
+		// 注册
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		// 注册所有的别名
