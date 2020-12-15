@@ -8,7 +8,7 @@ import org.aopalliance.intercept.MethodInvocation;
  * @Date: 2020/12/14 10:09
  * @Description:
  */
-public class SecurityInterceptor implements MethodInterceptor {
+public class MySecurityInterceptor implements MethodInterceptor {
 	@Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
 		System.out.println("==========执行安全校验====================");
