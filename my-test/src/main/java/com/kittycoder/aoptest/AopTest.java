@@ -31,6 +31,7 @@ public class AopTest {
 		// 将通知器Advisor注册到ProxyFactory
 		pf.addAdvisor(regexpAdvisor1);
 		pf.addAdvisor(regexpAdvisor2);
+
 		// 生成代理，执行方法
 		ITarget proxy = (ITarget) pf.getProxy();
 		proxy.say();
