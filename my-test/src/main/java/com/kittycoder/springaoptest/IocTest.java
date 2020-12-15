@@ -1,4 +1,4 @@
-package com.kittycoder.aoptest;
+package com.kittycoder.springaoptest;
 
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.DefaultPointcutAdvisor;

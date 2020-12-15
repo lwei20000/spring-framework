@@ -1,4 +1,4 @@
-package com.kittycoder.aoptest;
+package com.kittycoder.springaoptest;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

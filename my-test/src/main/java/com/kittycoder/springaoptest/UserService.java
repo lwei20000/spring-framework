@@ -1,4 +1,4 @@
-package com.kittycoder.aoptest;
+package com.kittycoder.springaoptest;
 
 /**
  * @Auther: weiliang
