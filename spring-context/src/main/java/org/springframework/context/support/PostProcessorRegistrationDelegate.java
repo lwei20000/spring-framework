@@ -52,6 +52,22 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 
+	/**方法比较长**/
+	/**
+	 * invokeBeanFactoryPostProcessors
+	 * -------------------------------
+	 * 1、遍历beanFactoryPostProcessors，看是否实现了BeanDefinitionRegistryPostProcessor接口，集合：registryProcessors集合 ｜ regularPostProcessors集合
+	 * 2、遍历BeanDefinitionRegistryPostProcessor的实现，实现了PriorityOrdered接口？currentRegistryProcessors集合、排序--> registryProcessors集合;依次调用registry方法
+	 * 3、获取BeanDefinitionRegistryPostProcessor的实现，然后判断其中的实现是否处理过是否实现了Ordered接口？。。。
+	 * 4、循环遍历步骤3，直到beanFactory中不存在没有处理过的BeanDefinitionRegistryPostProcessor，然后依次调用registryProcessors集合
+	 * -------------------------------
+	 * 以上四个步骤都是主要是都做一件事：保障处理完beanFacotry中BeanDefinitionRegistryPostProcessor！！！
+	 * 原因在于每一次的BeanDefinitionRegistryPostProcessor的实现，都有可能向beanFacory中添加新的。
+	 *
+	 *
+	 * @param beanFactory
+	 * @param beanFactoryPostProcessors
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
@@ -67,7 +83,7 @@ final class PostProcessorRegistrationDelegate {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
 							(BeanDefinitionRegistryPostProcessor) postProcessor;
-					registryProcessor.postProcessBeanDefinitionRegistry(registry);
+					registryProcessor.postProcessBeanDefinitionRegistry(registry); // 调用registry方法
 					registryProcessors.add(registryProcessor);
 				}
 				else {
@@ -82,8 +98,7 @@ final class PostProcessorRegistrationDelegate {
 			List<BeanDefinitionRegistryPostProcessor> currentRegistryProcessors = new ArrayList<>();
 
 			// First, invoke the BeanDefinitionRegistryPostProcessors that implement PriorityOrdered.
-			String[] postProcessorNames =
-					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
+			String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			for (String ppName : postProcessorNames) {
 				if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
@@ -92,7 +107,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
-			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry); //调用registry方法
 			currentRegistryProcessors.clear();
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
@@ -105,7 +120,7 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
-			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);//调用registry方法
 			currentRegistryProcessors.clear();
 
 			// Finally, invoke all other BeanDefinitionRegistryPostProcessors until no further ones appear.
@@ -122,7 +137,7 @@ final class PostProcessorRegistrationDelegate {
 				}
 				sortPostProcessors(currentRegistryProcessors, beanFactory);
 				registryProcessors.addAll(currentRegistryProcessors);
-				invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
+				invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);//调用registry方法
 				currentRegistryProcessors.clear();
 			}
 

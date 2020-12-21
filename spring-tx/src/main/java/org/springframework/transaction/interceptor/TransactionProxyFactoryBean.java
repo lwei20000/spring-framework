@@ -191,12 +191,18 @@ public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBe
 	 */
 	@Override
 	protected Object createMainInterceptor() {
+		// 这是Spring事务处理完成AOP配置的地方
+		// 在afterPropertiesSet中，可以看到为ProxyFactory生成代理对象、配置通知器、设置代理接口方法等。
+		// 这儿调用的是AbstractSingletonProxyFactoryBean.afterPropertiesSet()
 		this.transactionInterceptor.afterPropertiesSet();
+
 		if (this.pointcut != null) {
+			// 这里使用默认的通知器DefaultPointcutAdvisor，并为通知起配置事务处理拦截器
 			return new DefaultPointcutAdvisor(this.pointcut, this.transactionInterceptor);
 		}
 		else {
 			// Rely on default pointcut.
+			// 如果没有直至pointcut，使用TransactionAttributeSourceAdvisor作为通知器，并为通知器设置拦截器
 			return new TransactionAttributeSourceAdvisor(this.transactionInterceptor);
 		}
 	}

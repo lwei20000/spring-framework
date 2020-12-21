@@ -245,7 +245,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
-		// 提取对应的beanName
+		// 提取对应的beanName（如果是factorybean的化名字前面+&）
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
