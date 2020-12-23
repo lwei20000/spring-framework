@@ -1,8 +1,10 @@
 buildscript {
 
-	// 默认的包下载地址太慢，使用阿里的镜像
 	repositories {
-		maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		//加上阿里云镜像
+		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
+		maven { url "https://repo.spring.io/plugins-release" }
 	}
 
 	dependencies {

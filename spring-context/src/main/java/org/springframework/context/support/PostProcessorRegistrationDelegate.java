@@ -52,8 +52,9 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 
-	/**方法比较长**/
+
 	/**
+	 * ===============方法比较长===============.......
 	 * invokeBeanFactoryPostProcessors
 	 * -------------------------------
 	 * 1、遍历beanFactoryPostProcessors，看是否实现了BeanDefinitionRegistryPostProcessor接口，集合：registryProcessors集合 ｜ regularPostProcessors集合
@@ -63,10 +64,6 @@ final class PostProcessorRegistrationDelegate {
 	 * -------------------------------
 	 * 以上四个步骤都是主要是都做一件事：保障处理完beanFacotry中BeanDefinitionRegistryPostProcessor！！！
 	 * 原因在于每一次的BeanDefinitionRegistryPostProcessor的实现，都有可能向beanFacory中添加新的。
-	 *
-	 *
-	 * @param beanFactory
-	 * @param beanFactoryPostProcessors
 	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {

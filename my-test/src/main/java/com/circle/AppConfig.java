@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @Description:
  */
 @Configuration
-@ComponentScan("com.circle.service")
+@ComponentScan("com.circle")
 //@EnableAspectJAutoProxy
 public class AppConfig {
 }
