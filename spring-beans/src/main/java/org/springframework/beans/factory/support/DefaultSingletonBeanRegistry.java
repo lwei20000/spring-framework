@@ -182,14 +182,30 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				// 如果此bean正在加载则不处理
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
-					// 当某些方法需要提前初始化的时候则会调用addSingletonFactory方法将对应的ObjectFactory初始化策略存储在singletonFactories
-					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
+
+					/**
+					 * 一级缓存：singletonObjects
+					 * 二级缓存：earlySingletonObjects
+					 * 三级缓存：sigletonFactories
+					 *
+					 * 三级缓存是任何bean（无论有无循环依赖）都会创建lambda工厂放进来， 并不是只有循环依赖的场景才放进来
+					 * 循环bean使用了工厂，普通bean只是不用这个工厂而已。
+					 */
+
+					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName); // 从三级缓存拿到lambda表达式（就是工厂）
+
 					if (singletonFactory != null) {
-						// 调用预先设定的getObject方法
+
+						// 是用工厂创建对象。（此时这个对象还不是完整的bean==意思是生命周期还没走完）
 						singletonObject = singletonFactory.getObject();
-						// 记录在缓存中，earlySingletonObjects和singletonFactories互斥
-						this.earlySingletonObjects.put(beanName, singletonObject);
-						this.singletonFactories.remove(beanName);
+
+						this.earlySingletonObjects.put(beanName, singletonObject);  // 放入二级缓存（二级缓存是创建过程中的bean）
+
+						/**singletonObject为生命这儿需要一个二级缓存暂存，而不是直接返回singletonObject到一级缓存？**/
+						// 因为：如果有另外多个对象依赖这个singletonObject，没有这一级的二级缓存，那就会有使用工厂创建一个bean，返回到一级缓存就重复了。
+						// 这儿先暂存到二级缓存，其它的依赖它的对象先从二级缓存里面取，从而避免了重复！！！
+
+						this.singletonFactories.remove(beanName);  // 移除三级缓存（工厂缓存）（执行过一次就不存在了）
 					}
 				}
 			}
