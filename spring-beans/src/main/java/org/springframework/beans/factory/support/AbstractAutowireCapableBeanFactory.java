@@ -601,6 +601,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			populateBean(beanName, mbd, instanceWrapper);
 
 			// 初始化bean
+			// 在完成对Bean的生成和依赖注入后，开始对Bean进行初始化，这个初始化包含了对后置处理器的回调。
 			exposedObject = initializeBean(beanName, exposedObject, mbd);
 		}
 		catch (Throwable ex) {
@@ -1793,11 +1794,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			invokeAwareMethods(beanName, bean);
 		}
 
+		// 这里是对后置处理器的Before回调进行调用
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
 			wrappedBean = applyBeanPostProcessorsBeforeInitialization(wrappedBean, beanName);
 		}
 
+		// 调用bean的初始化方法，这个初始化方法是在BeanDefinition中呗定义为init-method属性的。
+		// 同时，如果bean实现了InitilalizaingBean接口，那么还要回调afterPropertiesSet。
 		try {
 			invokeInitMethods(beanName, wrappedBean, mbd);
 		}
@@ -1806,10 +1810,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 					(mbd != null ? mbd.getResourceDescription() : null),
 					beanName, "Invocation of init method failed", ex);
 		}
-		if (mbd == null || !mbd.isSynthetic()) {
 
-			// ※※※※※※※※※※ 目标对象--->代理对象 ※※※※※※※※※※
-			// ※※※※※※※※※※ 后置处理器进行加强   ※※※※※※※※※※
+		// 这里是对后置处理器的After回调进行调用
+		if (mbd == null || !mbd.isSynthetic()) {
 			wrappedBean = applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);
 		}
 
