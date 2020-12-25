@@ -1,5 +1,6 @@
-package com.aop;
+package com.aop.advisor;
 
+import com.aop.aspect.TestPoint;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @Description:
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath*:com/aop/advisor/applicationContext.xml"})
 public class TestAdvisorTest {
 
 	@Autowired
-	private TestPoint testPoint;
+	public TestPoint testPoint;
 
 	@Test
 	public void test() {

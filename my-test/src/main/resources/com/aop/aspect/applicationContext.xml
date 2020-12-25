@@ -4,13 +4,7 @@
 		        xmlns:context="http://www.springframework.org/schema/context"
 		        xmlns:aop="http://www.springframework.org/schema/aop"
 		        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
-	<context:component-scan base-package="com.aop"/>
-
-	<!-- AOP方式1：使用通知器的方式配置 -->
-	<aop:config>
-		<aop:pointcut id="test" expression="execution(* com.aop.TestPoint.test())"/>
-		<aop:advisor advice-ref="advisorTest" pointcut-ref="test"/>
-	</aop:config>
+	<context:component-scan base-package="com.aop.aspect"/>
 
 	<!-- 总体来讲：
 	 	1、通知器是一个特殊的切面。
@@ -19,12 +13,12 @@
 	 -->
 
 	<!-- AOP方式2：使用切面方式配置 -->
-	<!--<aop:config>
+	<aop:config>
 		 <aop:aspect ref="aspectTest">
-			 <aop:pointcut id="test" expression="execution(* com.aop.TestPoint.test())"/>
+			 <aop:pointcut id="test" expression="execution(* com.aop.aspect.TestPoint.test())"/>
 			 <aop:before method="doBefore" pointcut-ref="test"/>
 			 <aop:after-returning method="doAfter" pointcut-ref="test"/>
 		 </aop:aspect>
-	 </aop:config>-->
+	 </aop:config>
 
 </beans>
