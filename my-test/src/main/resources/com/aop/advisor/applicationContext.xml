@@ -8,7 +8,7 @@
 
 	<!-- AOP方式1：使用通知器的方式配置 -->
 	<aop:config>
-		<aop:pointcut id="test" expression="execution(* com.aop.aspect.TestPoint.test())"/>
+		<aop:pointcut id="test" expression="execution(* com.aop.advisor.TestPoint.test())"/>
 		<aop:advisor advice-ref="advisorTest" pointcut-ref="test"/>
 	</aop:config>
 </beans>
