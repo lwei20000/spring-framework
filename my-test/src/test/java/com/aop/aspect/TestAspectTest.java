@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath*:com/aop/aspect/applicationContext.xml"})
-public class TestAdvisorTest {
+public class TestAspectTest {
 
 	@Autowired
 	public TestPoint testPoint;
