@@ -104,6 +104,7 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 		}
 		// 这里使用DefaultAopProxyFactory来创建AopFactory
 		/**因为这个ProxyFactory类本身就是ProxyConfig的子类，所以这里创建AopProxy的过程和一般Proxy代理的创建过程是一样的**/
+		// getAopProxyFactory取得的是DefaultAopProxyFactory，这是在本类初始化函数中定义的。
 		return getAopProxyFactory().createAopProxy(this);
 	}
 

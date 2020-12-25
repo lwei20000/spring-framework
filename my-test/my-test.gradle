@@ -4,13 +4,12 @@ dependencies {
     compile(project(":spring-context"))
     compile(project(":spring-beans"))
     compile(project(":spring-tx"))
+    compile(project(":spring-test"))
 
-    compile("org.aspectj:aspectjweaver")
-    compileOnly("org.aspectj:aspectjrt")
-    compile(project(":spring-aop"))
+//    compile(project(":spring-aop"))
     compile(project(":spring-aspects"))
 
-
-
-
+    // 引入junit包
+    testCompile("junit:junit:4.12")
+    testCompile("org.hamcrest:hamcrest-core:1.3")
 }
