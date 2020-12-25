@@ -7,10 +7,25 @@
 	<context:component-scan base-package="com.aop"/>
 
 	<!-- AOP方式1：使用通知器的方式配置 -->
-	<aop:config>
+	<!--<aop:config>
 		<aop:pointcut id="test" expression="execution(* com.aop.TestPoint.test())"/>
 		<aop:advisor advice-ref="advisorTest" pointcut-ref="test"/>
-	</aop:config>
+	</aop:config>-->
+
+	<bean id="testAdvisor" class="com.aop.AdvisorTest"/>
+	<bean id="testAOP" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.aop.ABCINterface</value>
+		</property>
+		<property name="target">
+			<value>com.aop.TestPoint</value>
+		</property>
+		<property name="interceptorNames">
+			<list><value>testAdvisor</value></list>
+		</property>
+	</bean>
+
+
 
 	<!-- 总体来讲：
 	 	1、通知器是一个特殊的切面。
