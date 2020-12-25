@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 public class TestPoint {
 
 	public void test() {
-		System.out.println("方法调用");
+		System.out.println("========目标方法调用");
 	}
 }
