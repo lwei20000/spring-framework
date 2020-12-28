@@ -102,7 +102,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 
 	protected final Log logger = LogFactory.getLog(getClass());
 
-	/** 在ProxyFactoryBean中，通过interceptorNames属性来配置已经定义好的通知起Advisor
+	/** 在ProxyFactoryBean中，通过interceptorNames属性来配置已经定义好的通知器Advisor
 	 * 虽然名字叫interceptorNames，但实际上却是供AOP应用配置通知器的地方
 	 */
 	@Nullable
