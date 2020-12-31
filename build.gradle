@@ -5,6 +5,9 @@ buildscript {
 		maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
 		maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
 		maven { url "https://repo.spring.io/plugins-release" }
+
+		// 新增spring插件库
+		maven { url "https://repo.spring.io/plugins-release" }
 	}
 
 	dependencies {
@@ -300,8 +303,17 @@ configure(allprojects) { project ->
 			cacheChangingModulesFor 0, "seconds"
 		}
 		repositories {
+
+			//加上阿里云镜像
+			maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+			maven { url 'https://maven.aliyun.com/nexus/content/repositories/jcenter' }
+			maven { url "https://repo.spring.io/plugins-release" }
+
 			mavenCentral()
 			maven { url "https://repo.spring.io/libs-spring-framework-build" }
+
+			// 新增spring插件库
+			maven { url "https://repo.spring.io/plugins-release" }
 		}
 	}
 	configurations.all {
