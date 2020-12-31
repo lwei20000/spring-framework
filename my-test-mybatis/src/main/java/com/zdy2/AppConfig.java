@@ -12,6 +12,6 @@ import org.springframework.context.annotation.ImportResource;
  */
 @ComponentScan("com.zdy2")
 @Configuration
-@MapperScanLuban
+@MapperScanLuban   // MapperScanLuban------ImportBeanDefinitionRegistrar2（循环包中所有的mapper）
 public class AppConfig {
 }

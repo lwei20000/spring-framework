@@ -26,19 +26,29 @@ import java.lang.reflect.Proxy;
  */
 public class FactoryBeanLuban2 implements FactoryBean<Object> {
 
-	Object mapperInterface1;
+	Class<?> mapperInterface1;
 
+	// ImportBeanDefinitionRegistrar2会设置进来
 	public FactoryBeanLuban2(Class<?> mapperInterface) {
 		this.mapperInterface1 = mapperInterface;
 	}
 
+	/**
+	 *
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public Object getObject() throws Exception {
 
-		Class<?>[] interfaces = new Class<?>[]{CityMapper.class};
+		Class<?>[] interfaces = new Class<?>[]{mapperInterface1};
 		return Proxy.newProxyInstance(SqlSessionLuban.class.getClassLoader(), interfaces, new InvocationHandlerLuban());
 	}
 
+	/**
+	 *
+	 * @return
+	 */
 	@Override
 	public Class<?> getObjectType() {
 		return CityMapper.class;
