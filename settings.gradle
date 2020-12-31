@@ -40,6 +40,8 @@ include "integration-tests"
 
 // 添加自己的测试模块
 include "my-test"
+include "my-test-mybatis"
+
 
 rootProject.name = "spring"
 rootProject.children.each {project ->
