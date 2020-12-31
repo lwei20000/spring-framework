@@ -1,6 +1,5 @@
 package com.zdy2;
 
-import com.my.dao.CityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

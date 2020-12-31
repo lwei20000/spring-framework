@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!--老师bean-->
+	<bean id="userMapper1" class="com.zdy1.FactoryBeanLuban1">
+		<property name="mapperInterface1" value="com.zdy1.CityMapper"/>
+	</bean>
+
+</beans>
