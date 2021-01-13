@@ -294,8 +294,9 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	@Override
 	public Object postProcessAfterInitialization(@Nullable Object bean, String beanName) {
 		if (bean != null) {
+			// 构建出cacheKey=beanClassName_beanName
 			Object cacheKey = getCacheKey(bean.getClass(), beanName);
-			// earlyProxyReferences中存的是哪些进行了AOP的原始对象，beanName=原始对象
+			// earlyProxyReferences中存的是那些进行了AOP的原始对象，beanName=原始对象
 			// 注意：earlyProxyReferences中并没有存AOP之后的代理对象。
 			if (this.earlyProxyReferences.remove(cacheKey) != bean) { // 有循环依赖的话：cacheKey拿到是原始对象。这儿bean也是原始对象，所以就会相等，不进去。
 				// 没有循环依赖的时候，就会进入这里，进行AOP
@@ -337,12 +338,16 @@ public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
 	 * @return a proxy wrapping the bean, or the raw bean instance as-is
 	 */
 	protected Object wrapIfNecessary(Object bean, String beanName, Object cacheKey) {
+
+		// 如果已经处理过
 		if (StringUtils.hasLength(beanName) && this.targetSourcedBeans.contains(beanName)) {
 			return bean;
 		}
 		if (Boolean.FALSE.equals(this.advisedBeans.get(cacheKey))) {
 			return bean;
 		}
+
+		// 给定的bean类是否代表一个基础设施类，不应代理，或者配置了指定bean不需要自动代理
 		if (isInfrastructureClass(bean.getClass()) || shouldSkip(bean.getClass(), beanName)) {
 			this.advisedBeans.put(cacheKey, Boolean.FALSE);
 			return bean;

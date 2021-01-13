@@ -1,5 +1,6 @@
 package com.aop.advisor;
 
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.aop.AfterReturningAdvice;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import java.lang.reflect.Method;
  * Created by Kevin on 2017/11/15 0015.
  */
 @Component("advisorTest")
+@Aspect
 public class AdvisorTest implements MethodBeforeAdvice, AfterReturningAdvice{
 
 	/**
