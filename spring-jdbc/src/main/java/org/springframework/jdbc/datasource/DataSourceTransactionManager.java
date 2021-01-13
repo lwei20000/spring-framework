@@ -258,6 +258,8 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 		Connection con = null;
 
 		try {
+
+			// 尝试获取连接（并不是每次都要创建新连接）
 			if (!txObject.hasConnectionHolder() ||
 					txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
 				Connection newCon = obtainDataSource().getConnection();
@@ -266,33 +268,38 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 				}
 				txObject.setConnectionHolder(new ConnectionHolder(newCon), true);
 			}
-
 			txObject.getConnectionHolder().setSynchronizedWithTransaction(true);
 			con = txObject.getConnectionHolder().getConnection();
 
+			// 设置隔离级别、只读标识
 			Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);
 			txObject.setPreviousIsolationLevel(previousIsolationLevel);
 			txObject.setReadOnly(definition.isReadOnly());
 
+			// 更改自动提交设置，交由spring控制提交
 			// Switch to manual commit if necessary. This is very expensive in some JDBC drivers,
 			// so we don't want to do it unnecessarily (for example if we've explicitly
 			// configured the connection pool to set it already).
 			if (con.getAutoCommit()) {
 				txObject.setMustRestoreAutoCommit(true);
 				if (logger.isDebugEnabled()) {
-					logger.debug("Switching JDBC Connection [" + con + "] to manual commit");
+					logger.debug("Switching JDBC Connection [" + con + "] to manual commit");  // 取消自动提交，设置为手动提交
 				}
 				con.setAutoCommit(false);
 			}
 
 			prepareTransactionalConnection(con, definition);
+
+			// 设置判断当前线程是否存在事务的依据
 			txObject.getConnectionHolder().setTransactionActive(true);
 
+			// 设置过期时间
 			int timeout = determineTimeout(definition);
 			if (timeout != TransactionDefinition.TIMEOUT_DEFAULT) {
 				txObject.getConnectionHolder().setTimeoutInSeconds(timeout);
 			}
 
+			// 把当前连接绑定到当前线程
 			// Bind the connection holder to the thread.
 			if (txObject.isNewConnectionHolder()) {
 				TransactionSynchronizationManager.bindResource(obtainDataSource(), txObject.getConnectionHolder());

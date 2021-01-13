@@ -364,25 +364,25 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		// 声明式事务处理
 		if (txAttr == null || !(ptm instanceof CallbackPreferringPlatformTransactionManager)) {
 
-			// 创建TransactionInfo txInfo
+			// 1：创建
 			// Standard transaction demarcation with getTransaction and commit/rollback calls.
 			TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);
 
 			Object retVal;
 			try {
-				// 1：执行
+				// 2：执行
 				// This is an around advice: Invoke the next interceptor in the chain.
 				// This will normally result in a target object being invoked.
 				retVal = invocation.proceedWithInvocation();
 			}
 			catch (Throwable ex) {
-				// 2：回滚
+				// 3：回滚
 				// target invocation exception
 				completeTransactionAfterThrowing(txInfo, ex);
 				throw ex;
 			}
 			finally {
-				// 3：清除
+				// 4：清除
 				cleanupTransactionInfo(txInfo);
 			}
 
@@ -394,7 +394,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 				}
 			}
 
-			// 4：提交
+			// 5：提交
 			commitTransactionAfterReturning(txInfo);
 			return retVal;
 		}
@@ -570,6 +570,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	protected TransactionInfo createTransactionIfNecessary(@Nullable PlatformTransactionManager tm,
 			@Nullable TransactionAttribute txAttr, final String joinpointIdentification) {
 
+		// 如果没有名称指定，就使用方法唯一标示，并使用DelegatingTransactionAttribute封装属性txAttr
 		// If no name specified, apply method identification as transaction name.
 		if (txAttr != null && txAttr.getName() == null) {
 			txAttr = new DelegatingTransactionAttribute(txAttr) {
@@ -583,6 +584,7 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 		TransactionStatus status = null;
 		if (txAttr != null) {
 			if (tm != null) {
+				// 获取事务
 				status = tm.getTransaction(txAttr);
 			}
 			else {
@@ -592,6 +594,8 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 				}
 			}
 		}
+
+		// 构建事务信息
 		return prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);
 	}
 
@@ -653,13 +657,21 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 	 * @param ex throwable encountered
 	 */
 	protected void completeTransactionAfterThrowing(@Nullable TransactionInfo txInfo, Throwable ex) {
+
+		// 当抛出异常时，首先判断是否存在事务，这是基础依据
 		if (txInfo != null && txInfo.getTransactionStatus() != null) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Completing transaction for [" + txInfo.getJoinpointIdentification() +
 						"] after exception: " + ex);
 			}
+
+
+			// 判断抛出的异常是 RuntimeException 或者 Error
+			// txInfo.transactionAttribute = DefaultTransactionAttribute
+			// rollbackOn() ====> return (ex instanceof RuntimeException || ex instanceof Error);
 			if (txInfo.transactionAttribute != null && txInfo.transactionAttribute.rollbackOn(ex)) {
 				try {
+					// 回滚处理
 					txInfo.getTransactionManager().rollback(txInfo.getTransactionStatus());
 				}
 				catch (TransactionSystemException ex2) {
@@ -672,6 +684,8 @@ public abstract class TransactionAspectSupport implements BeanFactoryAware, Init
 					throw ex2;
 				}
 			}
+
+			// 如果不满足回滚条件，即使抛出异常，事务也会被提交
 			else {
 				// We don't roll back on this exception.
 				// Will still roll back if TransactionStatus.isRollbackOnly() is true.
