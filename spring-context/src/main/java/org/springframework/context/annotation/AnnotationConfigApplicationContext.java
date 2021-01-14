@@ -63,7 +63,14 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+
+		// 1.1 构造一个reader对象 -- 注册单个的BeanDefinition
+		// 这里面注册了一堆后置处理器：
+		// 包含 ConfigurationClassPostProcessor 后置处理器 --
+		// 包含 AutowiredAnnotationBeanPostProcessor 后置处理器 --
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+
+		// 1.2 构造一个scanner对象 -- 注册所有扫描到的BeanDefinition
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -84,9 +91,26 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 * {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... componentClasses) {
+
+		// 参考：com.test_ioc.ann.IocTest 测试类
+		// lw：这里调用了默认的构造方法，而默认构造方法中做了大量的注解处理。
 		this();
+
+		// lw:这里是把配置类appConfig注册到容器中。
 		register(componentClasses);
+
+		// lw：refresh是公共的。它在那儿处理appConfig的呢？
 		refresh();
+
+		// refresh();中
+		// prepareBeanFactory
+		// ---注册了两个后置处理器：、
+		// ------ApplicationContextAwareProcessor ：用于执行xxxAware接口中的方法
+		// ------ApplicationListenerDetector ：保证监听器被添加到容器中
+		// invokeBeanFactoryPostProcessors
+		// ---整的来说，它就是将容器中已经注册的bean工厂的后置处理器按照一定的顺序进行执行。
+		// ---那么到这一步为止，容器中已经有哪些bean工厂的后置处理器呢？
+		// ------
 	}
 
 	/**

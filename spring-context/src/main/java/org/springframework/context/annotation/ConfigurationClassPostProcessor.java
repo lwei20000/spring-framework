@@ -228,7 +228,10 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 */
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
+
+		// 生成一个注册表ID
 		int registryId = System.identityHashCode(registry);
+
 		if (this.registriesPostProcessed.contains(registryId)) {
 			throw new IllegalStateException(
 					"postProcessBeanDefinitionRegistry already called on this post-processor against " + registry);
@@ -237,8 +240,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			throw new IllegalStateException(
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
+
+		// 表明这个工厂已经经过了后置处理器了
 		this.registriesPostProcessed.add(registryId);
 
+		// 从名字来看这个方法是再对配置类的bd进行处理
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -269,37 +275,61 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * {@link Configuration} classes.
 	 */
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
+
+		// ========================第一段 ========================
+
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+
+		// 大家可以思考一个问题，当前容器中有哪些BeanDefinition呢？
+		// 这个地方应该能获取到哪些名字？
+		// AnnotatedBeanDefinitionReader中加载了5个类，再加上注册的配置类。
+		// org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+		// org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+		// org.springframework.context.annotation.internalCommonAnnotationProcessor
+		// org.springframework.context.event.internalEventListenerProcessor
+		// org.springframework.context.event.internalEventListenerFactory
+		// appConfig
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
 		for (String beanName : candidateNames) {
+			// 根据名称获取到对应BeanDefinition
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
+
 			if (beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE) != null) {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
+
+			// 检查是否是配置类，在这里会将对应的bd标记为 FullConfigurationClass 或者 LiteConfigurationClass
+			// 全配置类：FullConfigurationClass ：如果被@Configuration注解标注了
+			// 半配置类：LiteConfigurationClass ：如果被这些注解标注了，@Component，@ComponentScan，@Import，@ImportResource；或者方法上有@Bean注解（也就是说你想把这个类当配置类使用，但是没有添加@Configuration注解）
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
+				// 是配置类的话，将这个bd添加到configCandidates中
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
 		}
 
-		// Return immediately if no @Configuration classes were found
+		// appConfig配置类
+		// 没有配置类，就直接返回 Return immediately if no @Configuration classes were found
 		if (configCandidates.isEmpty()) {
 			return;
 		}
 
-		// Sort by previously determined @Order value, if applicable
+		// 根据@Order注解进行排序 Sort by previously determined @Order value, if applicable
 		configCandidates.sort((bd1, bd2) -> {
 			int i1 = ConfigurationClassUtils.getOrder(bd1.getBeanDefinition());
 			int i2 = ConfigurationClassUtils.getOrder(bd2.getBeanDefinition());
 			return Integer.compare(i1, i2);
 		});
 
+		// ========================第二段 ========================
+
 		// Detect any custom bean name generation strategy supplied through the enclosing application context
 		SingletonBeanRegistry sbr = null;
 		if (registry instanceof SingletonBeanRegistry) {
 			sbr = (SingletonBeanRegistry) registry;
+			// beanName的生成策略，不重要
 			if (!this.localBeanNameGeneratorSet) {
 				BeanNameGenerator generator = (BeanNameGenerator) sbr.getSingleton(
 						AnnotationConfigUtils.CONFIGURATION_BEAN_NAME_GENERATOR);
@@ -319,13 +349,24 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
 
+		// ========================第三段 ========================
+
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			// 在第二段代码中创建了一个ConfigurationClassParser，这里就是使用这个parser来解析配置类
+			// 我们知道扫描就是通过@ComponentScan，@ComponentScans来完成的，那么不出意外必定是在这里完成的扫描
+			// parser.parse()方法，调用processConfigurationClass()---调用doProcessConfigurationClass()---
+			// ---调用processImports()处理@imports注解---如果被注解类是ImportSelector接口则执行其selectImports方法
 			parser.parse(candidates);
+
+			// 校验在解析过程是中是否发生错误，同时会校验@Configuration注解的类中的@Bean方法能否被复写（被final修饰或者访问权限为private都不能被复写），
+			// 如果不能被复写会抛出异常，因为cglib代理要通过复写父类的方法来完成代理，后文会做详细介绍
 			parser.validate();
 
+			// 已经解析过的配置类
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
+			// 移除已经解析过的配置类，防止重复加载了配置类中的bd
 			configClasses.removeAll(alreadyParsed);
 
 			// Read the model and create bean definitions based on its content
@@ -334,10 +375,14 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						registry, this.sourceExtractor, this.resourceLoader, this.environment,
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
+
+			// 将通过解析@Bean，@Import等注解得到相关信息解析成bd被注入到容器中
 			this.reader.loadBeanDefinitions(configClasses);
 			alreadyParsed.addAll(configClasses);
 
 			candidates.clear();
+
+			// 如果大于，说明容器中新增了一些bd,那么需要重新判断新增的bd是否是配置类，如果是配置类，需要再次解析
 			if (registry.getBeanDefinitionCount() > candidateNames.length) {
 				String[] newCandidateNames = registry.getBeanDefinitionNames();
 				Set<String> oldCandidateNames = new HashSet<>(Arrays.asList(candidateNames));
@@ -359,7 +404,9 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 		while (!candidates.isEmpty());
 
-		// Register the ImportRegistry as a bean in order to support ImportAware @Configuration classes
+		// 注册ImportRegistry到容器中  Register the ImportRegistry as a bean in order to support ImportAware @Configuration classes
+		// 当通过@Import注解导入一个全配置类A（被@Configuration注解修饰的类），A可以实现ImportAware接口
+		// 通过这个Aware可以感知到是哪个类导入的A
 		if (sbr != null && !sbr.containsSingleton(IMPORT_REGISTRY_BEAN_NAME)) {
 			sbr.registerSingleton(IMPORT_REGISTRY_BEAN_NAME, parser.getImportRegistry());
 		}

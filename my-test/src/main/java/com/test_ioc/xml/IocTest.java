@@ -1,8 +1,10 @@
 package com.test_ioc.xml;
 
 import com.beans.Teacher;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * 梁威测试文件(lw)
@@ -28,12 +30,10 @@ public class IocTest {
 		System.out.println("=====================" + teacher);
 
 
-
-
 		// =============================================================================================================
 		// 案例二：容器的基本实现
 		// =============================================================================================================
-//		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("beanFactoryTest.xml"));
+//		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("com/spring-student.xml"));
 //		Teacher teacher2 = (Teacher) bf.getBean("teacher");
 //		System.out.println("=====================" + teacher2);
 
