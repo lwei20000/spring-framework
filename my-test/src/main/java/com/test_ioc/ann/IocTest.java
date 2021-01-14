@@ -1,7 +1,7 @@
 package com.test_ioc.ann;
 
 import com.test_ioc.ann.config.AppConfig;
-import com.test_ioc.ann.service.PayService;
+import com.beans.PayService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**

@@ -2,7 +2,7 @@ package com.test_spring.add;
 
 import com.beans.Cat;
 import com.test_ioc.ann.config.AppConfig;
-import com.test_ioc.ann.service.PayService;
+import com.beans.PayService;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

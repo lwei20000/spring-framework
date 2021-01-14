@@ -1,4 +1,4 @@
-package com.test_ioc.ann.service;
+package com.beans;
 
 public class PayServiceImpl implements PayService {
 	@Override
