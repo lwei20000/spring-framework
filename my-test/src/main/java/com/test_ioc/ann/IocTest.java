@@ -33,6 +33,11 @@ public class IocTest {
 		System.out.println(user);
 
 		// 查看annotation方式生成的ioc容器中，默认添加的bean
+		// org.springframework.context.annotation.internalConfigurationAnnotationProcessor———ConfigurationClassPostProcessor
+		// org.springframework.context.annotation.internalAutowiredAnnotationProcessor———————AutowiredAnnotationBeanPostProcessor
+		// org.springframework.context.annotation.internalCommonAnnotationProcessor————————--CommonAnnotationBeanPostProcessor
+		// org.springframework.context.event.internalEventListenerProcessor
+		// org.springframework.context.event.internalEventListenerFactory
 		String[] beanDefinitionNames = ac.getBeanDefinitionNames();
 		for(String beanDefinitionName : beanDefinitionNames){
 			System.out.println(beanDefinitionName);

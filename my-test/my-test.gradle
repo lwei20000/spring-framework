@@ -12,4 +12,7 @@ dependencies {
     // 引入junit包
     testCompile("junit:junit:4.12")
     testCompile("org.hamcrest:hamcrest-core:1.3")
+
+    // 数据源 org.apache.commons.dbcp.BasicDataSource
+    compile 'commons-dbcp:commons-dbcp:1.4'
 }

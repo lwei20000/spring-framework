@@ -16,14 +16,6 @@ public class IocTest {
 		// =============================================================================================================
 		// 案例一：容器的功能扩展
 		// =============================================================================================================
-		// 【一、读取配置文件，生成bean工厂】
-		// ClassPathXmlApplicationContext
-		// -->AbstractXmlApplicationContext
-		// -->AbstractRefreshableConfigApplicationContext
-		// -->AbstractRefreshableApplicationContext
-		// -->AbstractApplicationContext(大类)
-		// -->DefaultResourceLoader
-		// -->ResourceLoader(接口)
 		ApplicationContext ac = new ClassPathXmlApplicationContext("com/spring-student.xml");
 		// 【二、从ApplicationContext中取得bean】
 		Teacher teacher = (Teacher) ac.getBean("teacher");
@@ -31,6 +23,7 @@ public class IocTest {
 
 
 		// 查看xml方式生成的ioc容器中，默认添加的bean
+		// 对比annotation的方式，xml方式只有文件
 		String[] beanDefinitionNames = ac.getBeanDefinitionNames();
 		for(String beanDefinitionName : beanDefinitionNames){
 			System.out.println(beanDefinitionName);
