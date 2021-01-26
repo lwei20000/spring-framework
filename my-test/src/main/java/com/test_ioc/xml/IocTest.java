@@ -30,6 +30,13 @@ public class IocTest {
 		System.out.println("=====================" + teacher);
 
 
+		// 查看xml方式生成的ioc容器中，默认添加的bean
+		String[] beanDefinitionNames = ac.getBeanDefinitionNames();
+		for(String beanDefinitionName : beanDefinitionNames){
+			System.out.println(beanDefinitionName);
+		}
+
+
 		// =============================================================================================================
 		// 案例二：容器的基本实现
 		// =============================================================================================================

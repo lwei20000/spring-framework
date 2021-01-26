@@ -134,11 +134,11 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			// 3、创建一个载入器 reader = reader(factory)
 			// 4、从定义好的资源位置读入配置信息：reader.loadBeanDefinition(res)
 
-			// 创建Ioc容器。这里使用的是DefaultListableBeanFactory
+			// 创建Ioc容器。这里使用的是DefaultListableBeanFactory【spring技术内幕：计文柯】
 			// DefaultListableBeanFactory是经常要用到的一个IoC容器的实现，它包含了IoC容器所具备的重要功能，是在很多地方会用到的容器系列中的一个基本产品。
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
-			customizeBeanFactory(beanFactory); // 吧DefaultListableBeanFactory进行个性化定制（boolean重载，boolean循环依赖）
+			customizeBeanFactory(beanFactory); // 把DefaultListableBeanFactory进行个性化定制（boolean重载，boolean循环依赖）
 
 			// 启动对BeanDefinition的载入。
 			// 这里调用的loadBeanDefinitions实际上是一个抽象方法，实际的载入过程发生在哪里呢？在子类AbstractXmlApplicationContext

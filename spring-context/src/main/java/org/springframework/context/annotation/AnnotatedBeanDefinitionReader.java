@@ -67,7 +67,9 @@ public class AnnotatedBeanDefinitionReader {
 	 * @see #AnnotatedBeanDefinitionReader(BeanDefinitionRegistry, Environment)
 	 * @see #setEnvironment(Environment)
 	 */
+	// 第一步：调用了第一个构造函数，在这个过程中创建了environment，关于environment可以参考我的《Spring官网阅读（十一）ApplicationContext详细介绍（上）》
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry) {
+		// 这个environment实际上就是包含了系统环境变量以及JVM启动参数
 		this(registry, getOrCreateEnvironment(registry));
 	}
 
@@ -80,11 +82,15 @@ public class AnnotatedBeanDefinitionReader {
 	 * profiles.
 	 * @since 3.1
 	 */
+	// 第二步：进一步调用构造函数
 	public AnnotatedBeanDefinitionReader(BeanDefinitionRegistry registry, Environment environment) {
+		// 为read对象中的属性赋值
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+
+		// 从这个方法可以看出，Spring在创建reader对象的时候就开始注册bd了，那么Spring注册了哪些bd呢？注册的bd有什么用呢？我们接着往下看
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 

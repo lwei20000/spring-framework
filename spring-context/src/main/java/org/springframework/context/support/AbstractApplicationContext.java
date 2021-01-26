@@ -523,7 +523,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			// 3、检查必备属性是否存在
 			prepareRefresh();
 
-			// 这是在子类中启动refreshBeanFactory()的地方
+			// 这是在子类中启动refreshBeanFactory()的地方（Spring技术内幕：计文柯）
 			// Tell the subclass to refresh the internal bean factory.
 			// obtainFreshBeanFactory方法：
 			// 1、设置beanFactory序列化id
