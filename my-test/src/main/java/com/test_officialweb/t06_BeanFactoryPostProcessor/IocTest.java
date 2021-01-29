@@ -1,6 +1,5 @@
-package com.test_officialweb.BeanFactoryPostProcessor;
+package com.test_officialweb.t06_BeanFactoryPostProcessor;
 
-import com.beans.Teacher;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -8,6 +7,19 @@ import javax.sql.DataSource;
 
 /**
  * Spring官网阅读（六）容器的扩展点（一）BeanFactoryPostProcessor
+ *
+ * PostProcessorRegistrationDelegate （spring框架中执行所有BeanFactoryPostProcessor后置处理器的地方）
+ *
+ * --------------------------------
+ * BeanFactoryPostProcessor
+ * BeanDefinitionRegistryPostProcessor
+ * ConfigurationClassPostProcessor（spring框架默认给了这个一实现）
+ *
+ * --------------------------------
+ * BeanFactoryPostProcessor
+ * PropertyResourceConfigurer
+ * PlaceholderConfigurerSupport
+ * PropertyPlaceholderConfigurer（bean.xml文件中定义一个占位符配置器）
  *
  * 处理配置文件中数据源的占位符
  * 	<bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">

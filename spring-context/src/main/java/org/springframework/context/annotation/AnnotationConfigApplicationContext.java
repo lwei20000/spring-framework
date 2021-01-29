@@ -99,7 +99,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		// lw:这里是把配置类appConfig注册到容器中。
 		register(componentClasses);
 
-		// lw：refresh是公共的。它在那儿处理appConfig的呢？
+		// lw：refresh是公共的。它在那儿处理appConfig的呢？答案：注册的后置处理器中进行处理的。
 		refresh();
 
 		// refresh();中

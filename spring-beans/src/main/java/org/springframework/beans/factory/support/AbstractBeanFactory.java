@@ -949,8 +949,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Override
 	public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor) {
 		Assert.notNull(beanPostProcessor, "BeanPostProcessor must not be null");
+
+		// 可以看到，后添加进来的beanPostProcessor会覆盖之前添加的
 		// Remove from old position, if any
 		this.beanPostProcessors.remove(beanPostProcessor);
+
+		// 这个状态变量会影响之后的执行流程，我们只需知道一旦添加了一个InstantiationAwareBeanPostProcessor就会将变量置为true即可
 		// Track whether it is instantiation/destruction aware
 		if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
 			this.hasInstantiationAwareBeanPostProcessors = true;
@@ -958,6 +962,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		if (beanPostProcessor instanceof DestructionAwareBeanPostProcessor) {
 			this.hasDestructionAwareBeanPostProcessors = true;
 		}
+
 		// Add to end of list
 		this.beanPostProcessors.add(beanPostProcessor);
 	}
@@ -1101,15 +1106,21 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	@Override
 	public boolean isFactoryBean(String name) throws NoSuchBeanDefinitionException {
 		String beanName = transformedBeanName(name);
+
+		// 直接从单例池中获取这个Bean，然后进行判断，看是否是一个FactoryBean
 		Object beanInstance = getSingleton(beanName, false);
 		if (beanInstance != null) {
 			return (beanInstance instanceof FactoryBean);
 		}
+
+		// 查找不到这个BeanDefinition，那么从父容器中再次确认是否是一个FactoryBean
 		// No singleton instance found -> check bean definition.
 		if (!containsBeanDefinition(beanName) && getParentBeanFactory() instanceof ConfigurableBeanFactory) {
 			// No bean definition found in this factory -> delegate to parent.
 			return ((ConfigurableBeanFactory) getParentBeanFactory()).isFactoryBean(name);
 		}
+
+		// 从当前容器中，根据BeanDefinition判断是否是一个FactoryBean
 		return isFactoryBean(beanName, getMergedLocalBeanDefinition(beanName));
 	}
 
