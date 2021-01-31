@@ -7,4 +7,5 @@
 		<property name="mapperInterface1" value="com.zdy1.CityMapper"/>
 	</bean>
 
+
 </beans>
