@@ -1,5 +1,6 @@
 package com.test_officialweb.t06_BeanFactoryPostProcessor;
 
+import com.ACUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -39,9 +40,6 @@ public class IocTest {
 
 		// 查看xml方式生成的ioc容器中，默认添加的bean
 		// 对比annotation的方式，xml方式只有文件中配置的bean。没有多余的后置处理器。
-		String[] beanDefinitionNames = ac.getBeanDefinitionNames();
-		for(String beanDefinitionName : beanDefinitionNames){
-			System.out.println(beanDefinitionName);
-		}
+		ACUtils.printAllBeans(ac);
 	}
 }
