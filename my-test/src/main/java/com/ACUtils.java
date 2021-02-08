@@ -10,6 +10,10 @@ import org.springframework.beans.factory.ListableBeanFactory;
 public class ACUtils {
 
 
+	/**
+	 * 打印所有的beanDefinition定义
+	 * @param lbf
+	 */
 	public static void printAllBeans(ListableBeanFactory lbf) {
 		String[] beanDefinitionNames = lbf.getBeanDefinitionNames();
 		for(String beanDefinitionName : beanDefinitionNames){
