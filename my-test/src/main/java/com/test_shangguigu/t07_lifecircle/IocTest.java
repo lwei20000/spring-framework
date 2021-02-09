@@ -16,7 +16,7 @@ public class IocTest {
 		ACUtils.printAllBeans(ac); // 打印所有bean
 		Object bean1 = ac.getBean("car");
 
-		// 2.关闭容器
+		// 2.关闭容器，bean的生命周期会调用销毁方法进行销毁。
 		ac.close();
 
 	}

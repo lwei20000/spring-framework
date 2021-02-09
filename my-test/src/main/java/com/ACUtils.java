@@ -16,8 +16,10 @@ public class ACUtils {
 	 */
 	public static void printAllBeans(ListableBeanFactory lbf) {
 		String[] beanDefinitionNames = lbf.getBeanDefinitionNames();
+		System.out.println("======================================================");
 		for(String beanDefinitionName : beanDefinitionNames){
 			System.out.println(beanDefinitionName);
 		}
+		System.out.println("======================================================");
 	}
 }
