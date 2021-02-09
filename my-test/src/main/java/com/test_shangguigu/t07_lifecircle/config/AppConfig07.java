@@ -38,6 +38,7 @@ import org.springframework.context.annotation.*;
  * 4) BeanPostProcessor:bean的后置处理器，在bean初始化前进行一些处理工作。
  *              postProcessBeforeInitialization 在初始化之前工作
  *              postProcessAfterInitialization 在初始化之后工作
+ *    工作原理：（调试技巧：断点打在postProcessBeforeInitialization中查看方法调用栈）
  *
  */
 @ComponentScan({"com.test_shangguigu.t07_lifecircle.beans","com.test_shangguigu.t07_lifecircle.BeanPostProcessor"})
