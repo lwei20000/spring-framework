@@ -2,6 +2,7 @@ package com.test_shangguigu.t09_autowired;
 
 
 import com.ACUtils;
+import com.test_shangguigu.t09_autowired.beans.Boss;
 import com.test_shangguigu.t09_autowired.beans.Person;
 import com.test_shangguigu.t09_autowired.config.AppConfig09;
 import com.test_shangguigu.t09_autowired.service.BookService;
@@ -15,7 +16,7 @@ public class IocTest {
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig09.class);
 		ACUtils.printAllBeans(ac); // 打印所有bean
 
-		BookService bean = ac.getBean(BookService.class);
+		Boss bean = ac.getBean(Boss.class);
 		System.out.println(bean);
 
 		ac.close();

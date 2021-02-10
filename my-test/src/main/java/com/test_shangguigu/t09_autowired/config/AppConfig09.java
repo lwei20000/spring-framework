@@ -28,7 +28,16 @@ import org.springframework.context.annotation.PropertySource;
  *            需要导入javax.inject包，和@Autowired功能一样。
  *            它没有支持@Autowired(required=false)
  *
- * 3）
+ * 3）@Autowired：构造器、参数、方法、属性
+ *     1）【标注在方法位置】@Bean+方法参数，参数从容器中获取；默认不屑@Autowired效果是一样的，都能自动装配
+ *     2）【标注在构造器上】如果组件只有一个有参构造器，这个有参构造器的@@Autowired可以省略，参数位置的组件还是可以自动从容器中获取
+ *     3）【标注在参数位置】
+ *
+ * 3）自定义组件想要使用Spring容器底层的一些组件（ApplicationContext，BeanFactory，xxx），
+ *    自定义组件实现xxxAware，在创建对象的时候，会调用接口规定的方法注入组件需要的组件。
+ *    Aware吧Spring底层一些组件注入到自定义的Bean中；
+ *    XXXAware，功能使用xxxProcessor
+ *        ApplicationContextAware==》ApplicationContextAwareProcessor
  *
  *
  *
@@ -37,7 +46,9 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ComponentScan({"com.test_shangguigu.t09_autowired.controller"
 		,"com.test_shangguigu.t09_autowired.service"
-		,"com.test_shangguigu.t09_autowired.dao"})
+		,"com.test_shangguigu.t09_autowired.dao"
+		,"com.test_shangguigu.t09_autowired.beans"
+})
 public class AppConfig09 {
 
 
