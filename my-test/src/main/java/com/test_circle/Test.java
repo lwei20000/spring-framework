@@ -3,9 +3,7 @@ package com.test_circle;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- * @Auther: weiliang
- * @Date: 2020/12/23 15:28
- * @Description:
+ * 循环依赖的例子
  */
 public class Test {
 	public static void main(String[] args) {
