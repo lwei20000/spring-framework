@@ -15,7 +15,7 @@ public class UserService {
 	public void insertUser() throws Exception {
 		userDao.insert();
 		System.out.println("插入完成。。。");
-		int i = 12/0;
+		//int i = 12/0;
 		//throw new Exception();
 	}
 }
