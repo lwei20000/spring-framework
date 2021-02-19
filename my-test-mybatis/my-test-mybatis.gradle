@@ -16,9 +16,10 @@ dependencies {
     testCompile("org.hamcrest:hamcrest-core:1.3")
 
 
-    compile 'mysql:mysql-connector-java:5.1.44'
-    compile 'org.mybatis:mybatis:3.4.5'
+    // 引入mysql数据库驱动
+    compile 'mysql:mysql-connector-java:8.0.22'
+    //compile 'org.mybatis:mybatis:3.4.5'
     //compile group: 'org.mybatis', name: 'mybatis', version: '2.3.5'
-    compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.6'
+    //compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.6'
 
 }
