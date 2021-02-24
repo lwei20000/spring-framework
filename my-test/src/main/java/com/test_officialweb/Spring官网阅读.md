@@ -465,66 +465,69 @@ com.dmz.official.service.LuBanService@1b40d5f0
    luBan create 
    service create by no args constructor  // 可以看到执行的是空参构造
    null
-   123
    ```
-
-   ------
-
-   先不急得出结论，我们再进行一次测试，就是两个函数上都添加`@Autowired`注解呢？
-
-   ```java
+   
+------
+   
+先不急得出结论，我们再进行一次测试，就是两个函数上都添加`@Autowired`注解呢？
+   
+```java
    Exception in thread "main" org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'service': Invalid autowire-marked constructor: public com.dmz.official.service.Service(com.dmz.official.service.LuBanService). Found constructor with 'required' Autowired annotation already: public com.dmz.official.service.Service()
-   1
    ```
-
+   
    发现直接报错了，报错的大概意思是已经找到了一个被`@Autowired`注解标记的构造函数，同时这个注解中的required属性为true。后来我测试了将其中一个注解中的required属性改为false，发现还是报同样的错，最终将两个注解中的属性都改为false测试才通过，并且测试结果跟上面的一样，都是执行的无参构造。
 
    要说清楚这一点，涉及到两个知识
 
    - Spring中的注入模型，下篇文章专门讲这个
-   - Spring对构造函数的推断。这个到源码阶段我打算专门写一篇文章，现在我们暂且记得：
-
+- Spring对构造函数的推断。这个到源码阶段我打算专门写一篇文章，现在我们暂且记得：
+   
    > 在***默认的注入模型***下，Spring如果同时找到了两个***符合要求的构造函数***，那么Spring会采用默认的无参构造进行实例化，如果这个时候没有无参构造，那么此时会报错`java.lang.NoSuchMethodException`。什么叫符合要求的构造函数呢？就是构造函数中的参数Spring能找到，参数被Spring所管理。
-   >
+>
    > 这里需要着重记得：**一，默认注入模型；二，符合要求的构造函数**
-
-2. 如果我们同时采用构造注入加属性注入会怎么样呢？
+   
+2. 如果我们同时采用*<u>构造注入</u>*加*<u>属性注入</u>*会怎么样呢？
 
    在没有进行测试前，我们可以大胆猜测下，Spring虽然能在构造函数里完成属性注入，但是这属于实例化对象阶段做的事情，那么在后面真正进行属性注入的时候，肯定会将其覆盖掉。现在我们来验证我们的结论
 
    ```java
    @Component
    public class Service {
+     
    	private LuBanService luBanService;	
+     
+     // 这里是构造注入
    	public Service(LuBanService luBanService) {
    		System.out.println("注入luBanService by constructor with arg");
    		this.luBanService = luBanService;
    		System.out.println("service create by constructor with arg");
    	}
+     
    	public void test(){
    		System.out.println(luBanService);
    	}
+     
+     // 这里是属性注入
    	@Autowired
    	public void setLuBanService(LuBanService luBanService) {
-   		System.out.println("注入luBanService by setter");
+		System.out.println("注入luBanService by setter");
    		this.luBanService = null;
-   	}
+	}
    }
-   1234567891011121314151617
-   ```
 
+   ```
+   
    运行结果：
-
+   
    ------
-
+   
    ```java
-   注入luBanService by constructor with arg  // 实例化时进行了一次注入
+注入luBanService by constructor with arg  // 实例化时进行了一次注入
    service create by constructor with arg   // 完成了实例化
-   注入luBanService by setter    // 属性注入时将实例化时注入的属性进行了覆盖
+   注入luBanService by setter                // 属性注入时将实例化时注入的属性进行了覆盖
    null
-   1234
    ```
-
+   
    ------
 
 #### 区别：
@@ -559,9 +562,10 @@ public class MyService {
 	public void test(int a){
 		luBanService.addAndPrint(a);
 	}
-
 }
+```
 
+```java
 @Component
 // 原型对象
 @Scope("prototype")
@@ -577,7 +581,9 @@ public class LuBanService {
 		System.out.println(i);
 	}
 }
+```
 
+```java
 public class Main02 {
 	public static void main(String[] args) {
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class);
@@ -589,7 +595,7 @@ public class Main02 {
 }
 ```
 
-在上面的代码中，我们有两个Bean，MyService为单例的Bean,LuBanService为原型的Bean。我们的本意可能是希望每次都能获取到不同的LuBanService，预期的结果应该打印出：
+在上面的代码中，我们有两个Bean：MyService为单例的Bean，LuBanService为原型的Bean。我们的本意可能是希望每次都能获取到不同的LuBanService，预期的结果应该打印出：
 
 ------
 
@@ -611,7 +617,7 @@ public class Main02 {
 
 我们可以这么说，原型对象在这种情况下，失去了原型的意义，因为每次都使用的是同一个对象。那么如何解决这个问题呢？只要我每次在使用这个Bean的时候都去重新获取就可以了，那么这个时候我们可以通过方法注入来解决。
 
-#### 通过注入上下文（applicationContext对象）
+#### 一、通过注入上下文（applicationContext对象）
 
 又分为以下两种方式：
 
@@ -640,6 +646,7 @@ public class MyService implements ApplicationContextAware {
 ```java
 @Component
 public class MyService{
+  
 	@Autowired
 	private ApplicationContext applicationContext;
 
@@ -650,7 +657,9 @@ public class MyService{
 }
 ```
 
-#### 通过@LookUp的方式（也分为注解跟XML两种方式，这里只演示注解的）
+#### 二、通过@LookUp的方式
+
+（也分为注解跟XML两种方式，这里只演示注解的）
 
 ```java
 @Component
@@ -667,7 +676,7 @@ public class MyService{
 }
 ```
 
-#### 方法注入 之 replace-method
+#### 三、方法注入之 replace-method
 
 方法注入还有一种方式，即通过`replace-method`这种形式，没有找到对应的注解，所以这里我们也就用XML的方式测试一下：
 
@@ -686,7 +695,7 @@ public class MyService{
 
 ~~~java
 public class MyReplacer implements MethodReplacer {
-    @Override
+   @Override
    public Object reimplement(Object obj, Method method, Object[] args) throws Throwable {
         System.out.println("替代"+obj+"中的方法，方法名称："+method.getName());
         System.out.println("执行新方法中的逻辑");
@@ -702,8 +711,7 @@ public class MyService{
 
 public class Main {
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext cc =
-            new ClassPathXmlApplicationContext("application.xml");
+        ClassPathXmlApplicationContext cc = new ClassPathXmlApplicationContext("application.xml");
         MyService myService = ((MyService) cc.getBean("myService"));
         myService.test(1);
     }
@@ -778,23 +786,29 @@ public class MyReplacer implements MethodReplacer {
 
 ~~~java
 public class AutoService {
+  
 	DmzService service;
-	public void setService(DmzService dmzService){
+	
+  public void setService(DmzService dmzService){
 		System.out.println("注入dmzService"+dmzService);
 		service = dmzService;
 	}
 }
+~~~
 
+```java
 public class DmzService {
 }
+```
 
+```java
 public class Main03 {
 	public static void main(String[] args) {
 		ClassPathXmlApplicationContext cc = new ClassPathXmlApplicationContext("application.xml");
 		System.out.println(cc.getBean("auto"));
 	}
 }
-~~~
+```
 
 在上面的例子中我们可以看到
 
@@ -862,10 +876,12 @@ Spring可以自动注入互相协作的bean之间的依赖。自动注入有以�
 测试代码：
 
 ```java
-//记得需要将配置信息修改为：<bean id="auto" class="com.dmz.official.service.AutoService" 		   autowire="byName"/>
+//记得需要将配置信息修改为：<bean id="auto" class="com.dmz.official.service.AutoService" autowire="byName"/>
 
 public class AutoService {
-	DmzService dmzService;
+	
+  DmzService dmzService;
+  
 	/**
 	 * 	setXXX,Spring会根据XXX到容器中找对应名称的bean,找到了就完成注入
  	 */
@@ -874,7 +890,6 @@ public class AutoService {
 		service = dmzService;
 	}
 }
-123456789101112
 ```
 
 另外我在测试的时候发现，这种情况下，如果我们提供的参数不规范也不会完成注入的，如下：
@@ -889,16 +904,16 @@ public class AutoService {
 
 	/**
 	 * setXXX,Spring会根据XXX到容器中找对应名称的bean,找到了就完成注入
+	 * （本方法因为参数有两个，不会调用）
 	 */
-	public void setDmzService(DmzService dmzService,IndexService indexService) {
+	public void setDmzService(DmzService dmzService, IndexService indexService) {
 		System.out.println("注入dmzService" + dmzService);
 		this.dmzService = dmzService;
 	}
 }
-123456789101112131415
 ```
 
-本以为这种情况Spring会注入dmzService，indexService为null，实际测试过程中发现这个set方法根本不会被调用，说明Spring在选择方法时，还对参数进行了校验，`byName`这种注入模型下，参数只能是我们待注入的类型且只能有一个
+本以为这种情况Spring会注入dmzService，indexService为null，实际测试过程中发现这个set方法根本不会被调用，说明Spring在选择方法时，还对参数进行了校验，`byName`这种注入模型下，**参数只能是我们待注入的类型且只能有一个**
 
 - `byType`
 
@@ -971,7 +986,6 @@ public class AutoService {
 ```xml
 <bean id="a" class="xx.xx.A" depends-on="b"/>
 <bean id="b" class="xx.xx.B" />
-12
 ```
 
 或者：
@@ -981,7 +995,6 @@ public class AutoService {
 @DependsOn("b")
 public class A {
 }
-1234
 ```
 
 #### lazy:
@@ -1005,7 +1018,6 @@ public class A {
 public class A {
 	
 }
-123456
 ```
 
 到此为止，官网中`1.4`小节中的内容我们就全学习完啦！最核心的部分应该就是上文中的这个[图](https://daimingzhi.blog.csdn.net/article/details/103589903#jump)了。我们主要总结了Spring让对象产生依赖的方式，同时对各个方式进行了对比。通过这部分的学习，我觉得大家应该对Spring的依赖相关知识会更加系统，这样我们之后学习源码时碰到疑惑也会少很多。
