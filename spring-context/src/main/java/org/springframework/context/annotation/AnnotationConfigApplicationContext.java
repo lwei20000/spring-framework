@@ -65,9 +65,9 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	public AnnotationConfigApplicationContext() {
 
 		// 1.1 构造一个reader对象 -- 注册单个的BeanDefinition
-		// 这里面注册了一堆后置处理器：
-		// 包含 ConfigurationClassPostProcessor 后置处理器 --
-		// 包含 AutowiredAnnotationBeanPostProcessor 后置处理器 --
+		//     这里面注册了一堆后置处理器：
+		//     包含 ConfigurationClassPostProcessor 后置处理器 --
+		//     包含 AutowiredAnnotationBeanPostProcessor 后置处理器 --
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 
 		// 1.2 构造一个scanner对象 -- 注册所有扫描到的BeanDefinition
@@ -96,7 +96,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		// lw：这里调用了默认的构造方法，而默认构造方法中做了大量的注解处理。
 		this();
 
-		// lw:这里是把配置类appConfig注册到容器中。
+		// lw:这里是把配置类appConfig解析为BD并注册到容器中。
 		register(componentClasses);
 
 		// lw：refresh是公共的。它在那儿处理appConfig的呢？答案：注册的后置处理器中进行处理的。
