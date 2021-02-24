@@ -85,7 +85,10 @@ protected BeanWrapper createBeanInstance(String beanName, RootBeanDefinition mbd
     // 我们通过xml从<bean>标签中解析出来的class属性在刚刚开始的时候必定是个字符串
 		Class<?> beanClass = resolveBeanClass(mbd, beanName);
 
-		// 省略异常判断代码.....
+    if (beanClass != null && !Modifier.isPublic(beanClass.getModifiers()) && !mbd.isNonPublicAccessAllowed()) {
+			  throw new BeanCreationException(mbd.getResourceDescription(), beanName,
+					"Bean class isn't public, and non-public access not allowed: " + beanClass.getName());
+		}
     	
     // 2.通过beanDefinition中的supplier实例化这个bean
 		Supplier<?> instanceSupplier = mbd.getInstanceSupplier();
@@ -175,10 +178,11 @@ public class Main {
 		System.out.println(ac.getBean(Service.class));
 	}
 }
+```
 
+```java
 @Component
 public class Service {
-
 }
 ```
 
@@ -188,7 +192,7 @@ public class Service {
 
 可以发现，代码执行到最后一行，同时我们看代码上面的注释可以知道，当没有进行特殊的处理的时候，默认会使用无参构造函数进行对象的实例化
 
-- 通过普通XML的方式（同`@compent`注解，这里就不赘诉了）
+- 通过普通XML的方式（同`@component`注解，这里就不赘诉了）
 - 通过`@Configuration`注解的方式
 
 测试代码：
@@ -196,9 +200,9 @@ public class Service {
 ```java
 public class Main {
 	public static void main(String[] args) {
-        // 通过配置类扫描
+    // 通过配置类扫描
 		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class);
-        // 这里将测试对象换为config即可，同时记得将条件断点更改为beanName.equlas("config")
+    // 这里将测试对象换为config即可，同时记得将条件断点更改为beanName.equlas("config")
 		System.out.println(ac.getBean(config.class));
 	}
 }
@@ -224,8 +228,7 @@ public class Config {
 
 public class Main {
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext ac =
-                new AnnotationConfigApplicationContext(Config.class);
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(Config.class);
         System.out.println(ac.getBean("service"));
     }
 }
@@ -248,11 +251,12 @@ public class Main {
 
 ```java
 public static void main(String[] args) {
-    ClassPathXmlApplicationContext cc =
-        new ClassPathXmlApplicationContext("application.xml");
+    ClassPathXmlApplicationContext cc = new ClassPathXmlApplicationContext("application.xml");
     System.out.println(cc.getBean("service"));
 }
-12345
+```
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -265,16 +269,11 @@ public static void main(String[] args) {
 	</bean>
 
 	<!-- 测试实例工厂方法创建对象-->
-	<bean id="clientService"
-		  factory-bean="myFactoryBean"
-		  factory-method="get"/>
+	<bean id="clientService" factory-bean="myFactoryBean" factory-method="get"/>
 
 	<!--测试静态工厂方法创建对象-->
-	<bean id="service"
-		  class="com.dmz.official.service.MyFactoryBean"
-		  factory-method="staticGet"/>
+	<bean id="service" class="com.dmz.official.service.MyFactoryBean" factory-method="staticGet"/>
 </beans>
-123456789101112131415161718192021
 ```
 
 断点如下：
@@ -295,11 +294,9 @@ public static void main(String[] args) {
 
 ```java
 public static void main(String[] args) {
-    ClassPathXmlApplicationContext cc =
-        new ClassPathXmlApplicationContext("application.xml");
+    ClassPathXmlApplicationContext cc = new ClassPathXmlApplicationContext("application.xml");
     System.out.println(cc.getBean("clientService"));
 }
-12345
 ```
 
 断点如下：
@@ -359,7 +356,9 @@ public class Main02 {
 		service.test();
 	}
 }
+```
 
+```java
 @Component
 public class LuBanService {
 	LuBanService(){
@@ -373,7 +372,6 @@ public class LuBanService {
 ```java
 @Component
 public class Service {
-
 	private LuBanService luBanService;
 
 	public Service() {
@@ -383,6 +381,7 @@ public class Service {
 	public void test(){
 		System.out.println(luBanService);
 	}
+  
 	// 通过autowired指定使用set方法完成注入
 	@Autowired
 	public void setLuBanService(LuBanService luBanService) {
