@@ -347,7 +347,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					// DefaultSingletonBeanRegistry#getSingleton
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
-							//
 							// AbstractAutowireCapableBeanFactory#createBean
 							return createBean(beanName, mbd, args);
 						}

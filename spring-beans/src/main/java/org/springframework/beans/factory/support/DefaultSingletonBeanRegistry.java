@@ -174,10 +174,11 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
-		// 检查缓存中是否存在实例
+		// 尝试从缓存中获取成品的目标对象，如果存在，则直接返回
 		Object singletonObject = this.singletonObjects.get(beanName);
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
-			// 如果为空，则锁定全局变量进行处理
+			// 如果缓存中不存在目标对象，则判断当前对象是否已经处于创建过程中，在前面的讲解中，第一次尝试获取A对象
+			// 的实例之后，就会将A对象标记为正在创建中，因而最后再尝试获取A对象的时候，这里的if判断就会为true
 			synchronized (this.singletonObjects) {
 				// 如果此bean正在加载则不处理
 				singletonObject = this.earlySingletonObjects.get(beanName);
@@ -192,6 +193,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					 * 循环bean使用了工厂，普通bean只是不用这个工厂而已。
 					 */
 
+					// 这里的singletonFactories是一个Map，其key是bean的名称，而值是一个ObjectFactory类型的
+					// 对象，这里对于A和B而言，调用图其getObject()方法返回的就是A和B对象的实例，无论是否是半成品
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName); // 从三级缓存拿到lambda表达式（就是工厂）
 
 					if (singletonFactory != null) {

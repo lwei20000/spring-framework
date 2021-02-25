@@ -555,10 +555,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 		}
 		if (instanceWrapper == null) {
 			// 创建bean实例
-			//
-			//
-			//
-			//
 			instanceWrapper = createBeanInstance(beanName, mbd, args);
 		}
 		final Object bean = instanceWrapper.getWrappedInstance();
@@ -583,8 +579,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 		// Eagerly cache singletons to be able to resolve circular references
 		// even when triggered by lifecycle interfaces like BeanFactoryAware.
-		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences &&
-				isSingletonCurrentlyInCreation(beanName));
+		boolean earlySingletonExposure = (mbd.isSingleton() && this.allowCircularReferences && isSingletonCurrentlyInCreation(beanName));
 		if (earlySingletonExposure) {
 			if (logger.isTraceEnabled()) {
 				logger.trace("Eagerly caching bean '" + beanName +
@@ -617,8 +612,28 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			Object earlySingletonReference = getSingleton(beanName, false);
 			if (earlySingletonReference != null) {
 				if (exposedObject == bean) {
+					// 注意：什么情况下会导致exposedObject ！= bean的情况？如下：
+					// 因为exposedObject在initializeBean的时候，调用了后置处理器进行代理对象的生成。导致exposedObject已经不是原来的bean了
 					exposedObject = earlySingletonReference;
 				}
+
+
+				// 2021-02-25 09:29
+				// Error creating bean with name 'ZxjExpressionService':
+				// Unsatisfied dependency expressed through field 'xgScholarshipService';
+				// nested exception is org.springframework.beans.factory.BeanCreationException:
+				// Error creating bean with name 'xgScholarshipService':
+				// Injection of resource dependencies failed;
+				// nested exception is org.springframework.beans.factory.BeanCurrentlyInCreationException:
+				// Error creating bean with name 'limitServiceImpl':
+				// --------------------------------------------------------------
+				// Bean with name 'limitServiceImpl' has been injected into other beans [cpxxServiceImpl] in its raw version as part of a circular reference,
+				// but has eventually been wrapped. This means that said other beans do not use the final version of the bean.
+				// This is often the result of over-eager type matching - consider using 'getBeanNamesForType' with the 'allowEagerInit' flag turned off,
+				// for example.
+				// --------------------------------------------------------------
+
+				// 这里相当于是Spring框架的一次自检，对于循环依赖的场合，并且依赖组件会有代理对象生成的场景。要抛出异常拒绝这种现象的产生。
 				else if (!this.allowRawInjectionDespiteWrapping && hasDependentBean(beanName)) {
 					String[] dependentBeans = getDependentBeans(beanName);
 					Set<String> actualDependentBeans = new LinkedHashSet<>(dependentBeans.length);
