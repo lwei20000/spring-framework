@@ -2180,12 +2180,17 @@ public class MyFactoryBean implements FactoryBean {
 		return true;
 	}
 }
+```
 
+```java
 public class TestBean {
 	public TestBean(){
 		System.out.println("TestBean被创建出来了");
 	}
 }
+```
+
+```java
 // 测试类
 public class Main {
 	public static void main(String[] args) {
@@ -2213,7 +2218,7 @@ public class Main {
 
 我们先看下下面这张图：
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200107003448877.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxOTA3OTkx,size_16,color_FFFFFF,t_70)
+![在这里插入图片描述](https://cdn.jsdelivr.net/gh/lwei20000/pic/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxOTA3OTkx,size_16,color_FFFFFF,t_70-20210301174832150.png)
 
 涉及到`FactoryBean`主要在`3-11-6`这一步中，我们主要关注下面这段代码：
 
@@ -2323,8 +2328,10 @@ protected String transformedBeanName(String name) {
     // 這個方法主要用來解析別名，如果是別名的話，获取真实的BeanName
     return canonicalName(BeanFactoryUtils.transformedBeanName(name));
 }
+```
 
- // 处理FactoryBean
+```java
+// 处理FactoryBean
 public static String transformedBeanName(String name) {
     Assert.notNull(name, "'name' must not be null");
     // 没有带“&”，直接返回
@@ -2342,6 +2349,8 @@ public static String transformedBeanName(String name) {
 }
 ```
 
+
+
 1. 如果是一个`FactoryBean`，将会调用其`getObject()`方法，如果不是直接返回。
 
 我们可以看到，在调用`getObjectForBeanInstance(sharedInstance, name, beanName, null);`传入了一个参数—name，也就是还没有经过`transformedBeanName`方法处理的bean的名称，可能会带有“&”符号，Spring通过这个参数判断这个Bean是不是一个`FactoryBean`,如果是的话，会调用其`getObject()`创建Bean。**被创建的Bean不会存放于单例池中，而是放在一个名为`factoryBeanObjectCache`的缓存中。**具体的代码因为比较复杂，在这里我们就暂且不分析了，大家可以先留个印象，源码阶段我会做详细的分析。
@@ -2353,6 +2362,7 @@ public static String transformedBeanName(String name) {
 ```java
 @Nullable
 private String factoryBeanName;
+
 @Nullable
 private String factoryMethodName;
 ```
@@ -2387,7 +2397,7 @@ public class Config {
 
 上面两种情况，`BeanDefinition`中的`factoryBeanName`这个属性均不会为空，但是请注意此时记录的这个名字所对的Bean并不是一个实现了`FactoryBean`接口的Bean。
 
-综上，我们可以将Spring中的`FactoryBean`的概念泛化，也就是说所有生产对象的Bean我们都将其称为`FactoryBean`，那么可以总结画图如下：
+综上，我们可以将Spring中的`FactoryBean`的概念泛化，也就是说**所有生产对象的Bean**我们都将其称为`FactoryBean`，那么可以总结画图如下：
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200107003503263.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxOTA3OTkx,size_16,color_FFFFFF,t_70)
 
@@ -2413,7 +2423,6 @@ Class getType(String name)
 boolean isSingleton(String)
 
 String[] getAliases(String name)
-1234567891011
 ```
 
 通过这些方法，可以方便地获取bean，对Bean进行操作和判断。
@@ -2427,7 +2436,7 @@ String[] getAliases(String name)
 
 ### 总结
 
-在本文中我们完成了对`FactoryBean`的学习，最重要的是我们需要明白一点，`FactoryBean`是Spring中特殊的一个Bean，Spring利用它提供了另一种创建Bean的方式，`FactoryBean`整体的体系比较复杂，`FactoryBean`是如何创建一个Bean的一些细节我们还没有涉及到，不过不要急，在源码学习阶段我们还会接触到它，并会对其的整个流程做进一步的分析。目前容器的扩展点我们还剩最后一个部分，即`BeanPostProcessor`。`BeanPostProcessor`贯穿了整个Bean的生命周期，学习的难度更大。希望大家跟我一步步走下去，认认真真学习完Spring，加油！
+在本文中我们完成了对`FactoryBean`的学习，最重要的是我们需要明白一点，`FactoryBean`是Spring中特殊的一个Bean，Spring利用它提供了另一种创建Bean的方式，`FactoryBean`整体的体系比较复杂，`FactoryBean`是如何创建一个Bean的一些细节我们还没有涉及到，不过不要急，在源码学习阶段我们还会接触到它，并会对其的整个流程做进一步的分析。目前容器的扩展点我们还剩最后一个部分,即`BeanPostProcessor`。`BeanPostProcessor`贯穿了整个Bean的生命周期，学习的难度更大。希望大家跟我一步步走下去，认认真真学习完Spring，加油！
 
 ## Spring官网阅读（八）容器的扩展点（三）（BeanPostProcessor）
 

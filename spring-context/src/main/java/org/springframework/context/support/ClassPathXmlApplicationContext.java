@@ -139,7 +139,9 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 			throws BeansException {
 
 		super(parent);
+
 		setConfigLocations(configLocations);
+
 		if (refresh) {
 			// 由类图可以看出，父类AbstractApplicationContext类完成主要工作。
 			// 在本类的父类 AbstractRefreshableApplicationContext.refreshBeanFactory()方法完成容器的初始化，它在哪儿被调用的呢？

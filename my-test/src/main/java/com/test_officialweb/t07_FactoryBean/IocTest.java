@@ -2,11 +2,7 @@ package com.test_officialweb.t07_FactoryBean;
 
 import com.ACUtils;
 import com.test_officialweb.t07_FactoryBean.config.AppConfig;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import javax.sql.DataSource;
 
 /**
  *

@@ -103,14 +103,15 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		refresh();
 
 		// refresh();中
+		//
 		// prepareBeanFactory
 		// ---注册了两个后置处理器：、
 		// ------ApplicationContextAwareProcessor ：用于执行xxxAware接口中的方法
 		// ------ApplicationListenerDetector ：保证监听器被添加到容器中
+		//
 		// invokeBeanFactoryPostProcessors
 		// ---整的来说，它就是将容器中已经注册的bean工厂的后置处理器按照一定的顺序进行执行。
 		// ---那么到这一步为止，容器中已经有哪些bean工厂的后置处理器呢？
-		// ------
 	}
 
 	/**

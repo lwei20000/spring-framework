@@ -1,4 +1,4 @@
-package com.test_officialweb.t07_FactoryBean;
+package com.test_officialweb.t07_FactoryBean.factoryBean;
 
 import com.test_officialweb.t07_FactoryBean.beans.TestBean;
 import org.springframework.beans.factory.FactoryBean;
@@ -9,6 +9,7 @@ import org.springframework.beans.factory.FactoryBean;
  * @Description:
  */
 public class MyFactoryBean implements FactoryBean<Object> {
+
 	@Override
 	public Object getObject() throws Exception {
 		System.out.println("执行了一段复杂的创建Bean的逻辑");

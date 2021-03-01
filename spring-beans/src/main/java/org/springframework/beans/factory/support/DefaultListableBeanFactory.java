@@ -880,7 +880,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 									((SmartFactoryBean<?>) factory).isEagerInit());
 						}
 
-						// 4.如果是一个SmartFactoryBean并且不是懒加载的，那么创建这个FactoryBean创建的Bean
+						// 4.如果是一个SmartFactoryBean,并且不是懒加载的，那么创建这个FactoryBean创建的Bean
 						if (isEagerInit) {
 							getBean(beanName); // 此处getBean是取得工厂所生产的对象。
 						}
