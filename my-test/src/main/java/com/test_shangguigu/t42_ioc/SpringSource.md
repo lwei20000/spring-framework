@@ -47,8 +47,8 @@ Spring容器的refresh()
                        SmartInstantiationAwareBeanPostProcessor
                        MergedBeanDefinitonPostProcessor
     1）获取所有的BeanPostProcessor；后置处理器都默认可以有PriorityOrdered，Ordered两个接口来指定优先级。
-    2）先注册PriOrityOrdered优先级接口的BeanPostProcessor
-       吧每一个BeanPostProcessor添加到BeanFactory
+    2）先注册PriorityOrdered优先级接口的BeanPostProcessor
+       把每一个BeanPostProcessor添加到BeanFactory
     3）再注册实现了Ordered接口的BeanPostProcessor
     4）最后注册没有实现任何接口的BeanPostProcessor
     5）最最后注册MergedBeanDefinitionPostProcessor

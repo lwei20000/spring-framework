@@ -18,6 +18,5 @@ public class IocTest {
 
 		// 2.关闭容器，bean的生命周期会调用销毁方法进行销毁。
 		ac.close();
-
 	}
 }
