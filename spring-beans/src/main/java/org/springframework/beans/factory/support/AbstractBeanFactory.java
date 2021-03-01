@@ -250,13 +250,13 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		Object bean;
 
 		/**
-		 * 检查缓存中或者实例工厂中是否有对应的实例
+		 * 检查缓存中或者实例工厂中是否有对应的实例。
 		 * 为什么首先会使用这段代码呢？
-		 * 因为在创建单例bean的时候会存在依赖注入的情况，而在创建依赖的时候为了避免循环依赖。
+		 * 因为在创建单例bean的时候会存在依赖注入的情况，而在创建依赖的时候为了避免循环依赖，
 		 * Spring创建bean的原则是不等bean创建完成就会创建bean的ObjectFactory提早曝光，也就是
-		 * 吧ObjectFactory加入到缓存中，一旦下一个bean创建的时候依赖上了这个bean则直接使用ObjectFactory。
+		 * 把ObjectFactory加入到缓存中，一旦下一个bean创建的时候依赖上了这个bean则直接使用ObjectFactory。
 		 */
-		// 直接尝试从缓存获取 或者singletonFactories中的ObjectFactory中获取。
+		// 直接尝试从缓存获取或者singletonFactories中的ObjectFactory中获取。
 		// 一般的bean到这个方法，返回是空。
 		Object sharedInstance = getSingleton(beanName);
 
