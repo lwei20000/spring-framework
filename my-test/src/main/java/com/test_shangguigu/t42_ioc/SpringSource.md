@@ -79,12 +79,13 @@ Spring容器的refresh()
         1）获取容器中的所有Bean，一次进行初始化
         2）获取bean的定义信息，RootBeanDefinition
         3）不是抽象的并且是单实例的，并且不是懒加载的===>创建Bean，getBean()
-            1）判断是FactoryBean，是否是实现FactoryBean接口的Bean
-            2）不是工厂Bean，利用getBean(beanName); 创建对象
+            1）判断是FactoryBean（是否是实现FactoryBean接口的Bean）
+            2）若不是工厂Bean，利用getBean(beanName)创建对象
                 0 getBean(beanName)；
-                1 goGetBean(name,null,null,false);
-                2 先获取缓存中保存的单实例Bean，如果能获取到说明这个Bean之前被创建过。
-                  Map<String,Object> singletonObject
+                1 doGetBean(name,null,null,false);
+                2 先获取缓存中保存的单实例Bean，如果能获取到说明这个Bean之前被创建过。（所有被创建过的单实例bean都会被缓存起来）
+                    /** Cache of singleton objects: bean name to bean instance. */
+                  	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
                 3 缓存中获取不到，开始Bean的创建对象流程
                 4 标记当前bean已经被创建
                 5 获取Bean的定义信息
@@ -92,15 +93,15 @@ Spring容器的refresh()
                 7 启动单实例bean的创建流程
                    1）createBean(beanName,mbd,args);
                    2) Object bean = resolveBeforeInstantiation(beanName,mbdToUse); 
-                      InstantiationAwareBeanPostProcessor提前拦截返回代理对象:-----------【后置处理器】
-                      先出发：迫使他P肉测试是B额佛热Instantiation
-                      如果有返回值，触发postProcessAfterInitialization();
-                   3) 如果前面的InstantiationAwareBeanPostProcessor没有返回代理对象，调用4） ；
+                      InstantiationAwareBeanPostProcessor 提前拦截返回代理对象:-----------【后置处理器】
+                      先触发 postProcessBeforeInstantiation();
+                      再触发 postProcessAfterInitialization();
+                   3) 如果前面的 InstantiationAwareBeanPostProcessor 没有返回代理对象，调用4） ；
                    4) Object beanInstance = doCreatebean(beanName,mdbToUse,args); 
                        1）【创建bean实例】 createbeanInstatnce(beanName,mbd,args);
                           利用工厂方法或者对象的构造器创建出Bean实例
                        2）applyMergedBeanDefinitionPostProcessor
-                          调用MergedBeanDefinitionPostProcessor的postProcessMergedBeanDefinition            ----【后置处理器一】
+                          调用MergedBeanDefinitionPostProcessor的postProcessMergedBeanDefinition  ----【后置处理器一】
                        3）【bean属性赋值】populatebean(beanName,mbd,instanceWrapper);
                            <------赋值之前------->
                            1 拿到InstantiationAwarePostProcessor后置处理器

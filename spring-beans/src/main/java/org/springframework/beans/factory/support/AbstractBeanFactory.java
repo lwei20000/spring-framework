@@ -245,7 +245,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
-		// 提取对应的beanName（如果是factorybean的化名字前面+&）
+		// 提取对应的beanName（如果是factoryBean的话名字前面+&）
 		final String beanName = transformedBeanName(name);
 		Object bean;
 
@@ -256,7 +256,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		 * Spring创建bean的原则是不等bean创建完成就会创建bean的ObjectFactory提早曝光，也就是
 		 * 把ObjectFactory加入到缓存中，一旦下一个bean创建的时候依赖上了这个bean则直接使用ObjectFactory。
 		 */
-		// 直接尝试从缓存获取或者singletonFactories中的ObjectFactory中获取。
+		// 直接尝试从缓存获取
 		// 一般的bean到这个方法，返回是空。
 		Object sharedInstance = getSingleton(beanName);
 
@@ -281,7 +281,8 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				throw new BeanCurrentlyInCreationException(beanName);
 			}
 
-			// 如果beanDefinitionMap中也就是在所有已经加载的类中不包括beanName的话，则尝试从parentBeanFactory中检测。
+			// 如果beanDefinitionMap中，也就是在所有已经加载的类中不包括beanName的话，则尝试从parentBeanFactory中检测。
+			// SpringMVC一般会有父子容器。一般情况下这儿是没有父工厂的。这段不执行。
 			// Check if bean definition exists in this factory.
 			BeanFactory parentBeanFactory = getParentBeanFactory();
 			if (parentBeanFactory != null && !containsBeanDefinition(beanName)) {
@@ -303,8 +304,6 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					return (T) parentBeanFactory.getBean(nameToLookup);
 				}
 			}
-
-
 
 			// 如果不是仅仅做类型检查，则是要创建bean，这里要进行记录。记录到this.alreadyCreated这个map中。
 			if (!typeCheckOnly) {

@@ -19,9 +19,6 @@ public class IocTest {
 
 		MathCalculator mathCalculator = ac.getBean(MathCalculator.class);
 		mathCalculator.div(4,1);
-
-
-
 		ac.close();
 	}
 }

@@ -60,7 +60,7 @@ final class PostProcessorRegistrationDelegate {
 	 * 3、获取BeanDefinitionRegistryPostProcessor的实现，实现了Ordered接口？
 	 * 4、循环遍历步骤3，直到beanFactory中不存在没有处理过的BeanDefinitionRegistryPostProcessor，然后依次调用registryProcessors集合
 	 * -------------------------------
-	 * 以上四个步骤都是主要是都做一件事：保障处理完beanFacotry中的BeanDefinitionRegistryPostProcessor。
+	 * 以上四个步骤都是主要是都做一件事：保障处理完beanFacotry中的 BeanDefinitionRegistryPostProcessor。
 	 * 原因在于每一次的BeanDefinitionRegistryPostProcessor的实现，都有可能向beanFacory中添加新的。
 	 */
 	public static void invokeBeanFactoryPostProcessors(
@@ -335,8 +335,8 @@ final class PostProcessorRegistrationDelegate {
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
-		// 7.遍历所有实现了Ordered接口的后置处理器的名字，并进行创建
 		// Next, register the BeanPostProcessors that implement Ordered.
+		// 7.遍历所有实现了Ordered接口的后置处理器的名字，并进行创建
 		List<BeanPostProcessor> orderedPostProcessors = new ArrayList<>(orderedPostProcessorNames.size());
 		for (String ppName : orderedPostProcessorNames) {
 			BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
@@ -350,9 +350,9 @@ final class PostProcessorRegistrationDelegate {
 		sortPostProcessors(orderedPostProcessors, beanFactory);
 		registerBeanPostProcessors(beanFactory, orderedPostProcessors);
 
+		// Now, register all regular BeanPostProcessors.
 		// 7.遍历所有实现了常规后置处理器（没有实现任何排序接口）的名字，并进行创建
 		// 如果实现了MergedBeanDefinitionPostProcessor接口，放入到internalPostProcessors
-		// Now, register all regular BeanPostProcessors.
 		List<BeanPostProcessor> nonOrderedPostProcessors = new ArrayList<>(nonOrderedPostProcessorNames.size());
 		for (String ppName : nonOrderedPostProcessorNames) {
 			BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
@@ -365,8 +365,8 @@ final class PostProcessorRegistrationDelegate {
 		// 8.这里需要注意下，常规后置处理器不会调用sortPostProcessors进行排序
 		registerBeanPostProcessors(beanFactory, nonOrderedPostProcessors);
 
-		// 9.对internalPostProcessors进行排序并添加到容器中
 		// Finally, re-register all internal BeanPostProcessors.
+		// 9.对internalPostProcessors进行排序并添加到容器中
 		sortPostProcessors(internalPostProcessors, beanFactory);
 		registerBeanPostProcessors(beanFactory, internalPostProcessors);
 

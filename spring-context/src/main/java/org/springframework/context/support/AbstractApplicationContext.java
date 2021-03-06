@@ -526,16 +526,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			prepareRefresh();
 
 			// 3.2
-			// 这是在子类中启动refreshBeanFactory()的地方（Spring技术内幕：计文柯）
 			// Tell the subclass to refresh the internal bean factory.
+			// 这是在子类中启动refreshBeanFactory()的地方（Spring技术内幕：计文柯）
 			// obtainFreshBeanFactory方法：
 			// 1、设置beanFactory序列化id
 			// 2、获取beanFactory
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// 3.3
-			// 对BeanFactory进行各项功能的填充。
 			// Prepare the bean factory for use in this context.
+			// 对BeanFactory进行各项功能的填充。
 			// prepareBeanFactory()方法：
 			// 主要对BeanFactory进行一些配置：包括各种类加载器、需要忽略的依赖、以及后处理器、解析器
 			// 1、设置beanFactory一些属性
@@ -546,64 +546,72 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			try {
 				// 3.4
-				// 空方法，留给子类覆盖方法做额外的处理。Allows post-processing of the bean factory in context subclasses.
+				// Allows post-processing of the bean factory in context subclasses.
+				// 空方法，留给子类覆盖方法做额外的处理。
 				// postProcessBeanFactory：
 				// 1、子类重写以在BeanFactory完成创建后做进一步设置，
 				postProcessBeanFactory(beanFactory);
 
 				// 3.5
-				// 激活各种BeanFactory处理器。Invoke factory processors registered as beans in the context.
-				// BeanFactoryPostProcessors---这里是执行（BeanFactoryPostProcessors区别于下面BeanPostProcessors）
+				// Invoke factory processors registered as beans in the context.
+				// 激活各种BeanFactory处理器。
+				// BeanFactoryPostProcessors---注意这里是invoke执行（而下面的BeanPostProcessors只是注册并不执行）
 				// invokeBeanFactoryPostProcessors：
 				// 1、调用BeanDefinitionRegistryPostProcessor实现向容器内添加bean的定义
 				// 2、调用BeanFactoryPostProcessor实现向容器内bean的定义的属性添加
 				invokeBeanFactoryPostProcessors(beanFactory);
 
 				// 3.6
-				// 注册拦截Bean创建的处理器，这里只是注册，真正的调用是在getBean的时候。Register bean processors that intercept bean creation.
+				// Register bean processors that intercept bean creation.
+				// 注册拦截Bean创建的处理器，这里只是register注册，真正的调用是在getBean的时候。
 				// BeanPostProcessors---这里是注册
 				// registerBeanPostProcessors：
 				// 1、找到所有BeanPostPocessor的实现
-				// 2、陪许后注册进容器内
+				// 2、创建后注册进容器内
 				registerBeanPostProcessors(beanFactory);
 
 				// 3.7
-				// 为上下文初始化message源，即不同语言的消息体，国际化处理。Initialize message source for this context.
+				// Initialize message source for this context.
+				// 为上下文初始化message源，即不同语言的消息体，国际化处理。
 				// initMessageSource：
 				initMessageSource();
 
 				// 3.8
-				// 初始化应用消息广播器，并放入applicationEventMulticaster中。Initialize event multicaster for this context.
+				// Initialize event multicaster for this context.
+				// 初始化应用消息广播器，并放入applicationEventMulticaster中。
 				// initApplicationEventMulticaster：
 				// 1、初始化时间广播器，注册进容器中
 				initApplicationEventMulticaster();
 
 				// 3.9
-				// 留给子类来初始化其他的bean。Initialize other special beans in specific context subclasses.
+				// Initialize other special beans in specific context subclasses.
+				// 留给子类来初始化其他的bean。
 				// onRefresh：
 				// web环境下---创建web容器
 				onRefresh();
 
 				// 3.10
-				// 在所有注册的bean中查找listener bean，注册到消息广播器中。Check for listener beans and register them.
+				// Check for listener beans and register them.
+				// 在所有注册的bean中查找listener bean，注册到消息广播器中。
 				// registerListeners：
 				// 1、添加容器内事件监听器至广播器中
 				// 2、派发早起事件
 				registerListeners();
 
 				// 3.11
+				// Instantiate all remaining (non-lazy-init) singletons.
 				// 初始化剩下的单实例（非惰性的）：
 				// ApplicationContext实现的默认行为就是在启动时将所有singleton bean提前进行实例化。
 				// 提前实例化意味着作为初始化过程的一部分，ApplicationContext实例会创建并配置所有的singleton bean。
-				// 通常情况下这是件好事，因为这样在配置中的任何错误就会即刻被发现（否则的话可能要花几个小时甚至几天）。
-				// Instantiate all remaining (non-lazy-init) singletons.
+				// 通常情况下这是件好事，因为这样在配置中的任何错误就会即刻被发现（否则的话可能要花几个小时甚至几天）
 				// 这里只实例化单例对象，原型对象是在用的时候即getBean(XXX)的时候进行的实例化。
 				// finishBeanFactoryInitialization：
 				// 1、初始化所有剩下的单实例bean
 				finishBeanFactoryInitialization(beanFactory);
 
 				// 3.12
-				// 完成刷新过程，通知声明周期处理器lifecycleProcessor刷新过程，同事发出ContextRefreshEvent通知别人。Last step: publish corresponding event.
+				// Last step: publish corresponding event.
+				// 完成刷新过程，通知声明周期处理器lifecycleProcessor刷新过程，同事发出ContextRefreshEvent通知别人。
 				// finishRefresh：
 				// 1、初始化生命周期处理器
 				// 2、调用生命周期处理器onRfresh方法

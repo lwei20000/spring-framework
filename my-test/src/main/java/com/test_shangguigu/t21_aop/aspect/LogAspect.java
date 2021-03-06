@@ -1,4 +1,4 @@
-package com.test_shangguigu.t21_aop;
+package com.test_shangguigu.t21_aop.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -15,13 +15,13 @@ public class LogAspect {
 	@Pointcut("execution(public int com.test_shangguigu.t21_aop.MathCalculator.*(..))")
 	public void pointCut(){} //不用定义方法实体
 
-	// @Before在目标方法之前切入了；切入点表达式（指定在哪个方法切入）
+	// @Before---在目标方法之前切入了；pointCut()---切入点表达式（指定在哪个方法切入）
 	@Before("pointCut()")
 	public void logStart() {
 		System.out.println("除法运行。。。参数列表是：{}");
 	}
 
-	@After("com.test_shangguigu.t21_aop.LogAspect.pointCut()")
+	@After("com.test_shangguigu.t21_aop.aspect.LogAspect.pointCut()")
 	public void logEnd() {
 		System.out.println("除法结束。。。");
 	}
