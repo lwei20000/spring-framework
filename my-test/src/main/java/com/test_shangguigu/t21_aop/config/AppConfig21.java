@@ -99,12 +99,9 @@ import org.springframework.context.annotation.*;
  *                    }
  *              2）doCreateBean(beanName, mbdToUse, args);真正的去创建一个bean实例；和3.6的流程完全是一样的。
  *
- *
- *
- *
- *   【AnnotationAwareAspectJAutoProxyCreator的作用】
+ *   【AnnotationAwareAspectJAutoProxyCreator 的作用】
  *    AnnotationAwareAspectJAutoProxyCreator 是 InstantiationAwareBeanPostProcessor 类型的后置处理器，不是一般的后置处理器。
- *    1）每一个bean创建之前，调用postProcessBeforeinstantiation()
+ *    1）每一个bean创建之前，调用 postProcessBeforeInstantiation()
  *        关心 MathCalculator 和 LogAspect 的创建
  *        1）判断当前bean是否在advicedBeans中（保存了所有需要增强的bean）
  *        2）判断当前bean是否是基础类型的（Advice、PointCut、Advisor、AopInfrastructureBean，
@@ -114,7 +111,9 @@ import org.springframework.context.annotation.*;
  *               每一个封装的通知方法的增强器是InstantiationModelAwarePointcutAdvisor；
  *               判断每一个增强器是否是AspectJPointcutAdvisor类型的；返回true。
  *            2）永远返回false
- *    2）创建对象之后，调用postProcessAfterInstantiation()；
+ *
+ *   【断点三：】AbstractAutoProxyCreator.postProcessAfterInitialization() ---------------------------------------------- 第三个断点【AnnotationAwareAspectJAutoProxyCreator的作用】
+ *    2）创建对象之后，调用 postProcessAfterInitialization()；--- 注意这里是：Initialization初始化（上面是Instantiation实例化）
  *        return wrapIfNecessary(bean, beanName, cacheKey); // 包装如果需要的情况下
  *        1)获取当前bean的所有增强器（通知方法）Object[] specificInterceptors
  *            1）找到候选的所有增强器（找哪些通知方法是需要切入当前bean方法的）
@@ -130,13 +129,15 @@ import org.springframework.context.annotation.*;
  *        4）给容器中返回当前组件使用cglib增强了的代理对象
  *        5）以后容器中获取到的就是这个组件的代理对象，执行目标方法的时候，代理对象就会执行通知方法的流程；
  *
- *   【断点三：】IocTest.mathCalculator.div(4,1); ----------------------------------------------------------------------- 第三个断点【目标方法的执行 - step into】
+ *
+ *
+ *   【断点四：】IocTest.mathCalculator.div(4,1); ----------------------------------------------------------------------- 第四个断点【目标方法的执行 - step into】
  *             step into之前查看mathCalculator确实是增强后的对象 MathCalculator$$enhancerBySpringCGLIB$$b30c3a63
  *    3）目标方法执行
  *        容器中保存了组件的代理对象（cglib增强后的对象），这个对象里面保存了详细信息（比如增强器、目标对象，xxx）
  *        step into之后，进入到下面的CglibAopProxy.intercept()代码：
  *        1）CglibAopProxy.intercept(); 拦截目标的执行
- *        2）根据ProxyFactory对象获取将要执行的目标方法的拦截器链；
+ *        2）根据 ProxyFactory 对象获取将要执行的目标方法的拦截器链；
  *           List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
  *                1）List<Object> interceptorList 保存所有拦截器
  *                   长度是5：一个默认的 ExposeInvocationInterceptor ，另外是4个增强器（before after return throw之类的）；
