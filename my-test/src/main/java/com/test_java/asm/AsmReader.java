@@ -1,4 +1,4 @@
-package com.test.asm;
+package com.test_java.asm;
 
 //import jdk.internal.org.objectweb.asm.ClassReader;
 //import jdk.internal.org.objectweb.asm.util.TraceClassVisitor;

@@ -1,4 +1,4 @@
-package com.test.asm;
+package com.test_java.asm;
 
 public class PT00_ReadMe03 {
 	public static void main(String[] args) {

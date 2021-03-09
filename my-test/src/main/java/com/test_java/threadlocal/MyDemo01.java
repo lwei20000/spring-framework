@@ -1,4 +1,4 @@
-package com.test.threadlocal;
+package com.test_java.threadlocal;
 
 public class MyDemo01 {
 	private String content;

@@ -1,4 +1,4 @@
-package com.test.threadlocal;
+package com.test_java.threadlocal;
 
 public class MyDemo02 {
 	ThreadLocal<String> t1 = new ThreadLocal<String>();

@@ -1,9 +1,9 @@
-package com.test.asm;
+package com.test_java.asm;
 
-public class PT00_ReadMe01 {
+public class PT00_ReadMe02 {
 	public static void main(String[] args) {
 		int i = 2;
-		i = i++;
+		int b = i++;
 		System.out.println(i);
 	}
 }
