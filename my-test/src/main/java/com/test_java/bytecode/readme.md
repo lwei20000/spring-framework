@@ -283,3 +283,92 @@ Process finished with exit code 0
 
 > 二进制字节码结构
 
+## 例子：运行时内存
+
+https://www.bilibili.com/video/BV13Z4y1s7TH
+
+https://www.bilibili.com/video/BV1w54y1X7Sq
+
+### 1）原始java代码
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318213126963.png" alt="image-20210318213126963" style="zoom:50%;" />
+
+> 局部变量a=10
+>
+> 局部变量b=shot最大值+1 // 注意：存放位置
+
+### 2）编译后的字节码文件
+
+```
+略
+```
+
+
+
+### 3）常量池载入运行时常量池
+
+> 1. 方法的字节码是存放在**方法区**
+> 2. 运行时常量池是属于方法区的一个部分
+> 3. 比较小的数字（10）是与字节码存放在一起的。一旦超过了short.Max_Value=32767的范围就是放在运行时常量池中。
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318213309863.png" alt="image-20210318213309863" style="zoom:50%;" />
+
+### 4）方法字节码载入方法区
+
+<img src="/Users/weiliang/Library/Application Support/typora-user-images/image-20210318213733806.png" alt="image-20210318213733806" style="zoom:50%;" />
+
+### 5）main线程开始运行，分配栈帧内存
+
+> 1. 程序运行之前在栈中分配局部变量表+操作数栈两部分空间。这个是当前线程栈帧的内存大小。
+> 2. 执行引擎区读取方法区中的一个个指令开始执行。
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318212935814.png" alt="image-20210318212935814" style="zoom:50%;" />
+
+> 1. bipush 10  #把10压入栈中（10在short范围内，所以不用从常量池中取）
+> 2. istore 1    #栈顶数据弹出，存入到局部变量表的1号槽位。（0号是args占用了）
+
+### <img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318214217338.png" alt="image-20210318214217338" style="zoom:50%;" />
+
+
+
+> 
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318214404934.png" alt="image-20210318214404934" style="zoom:50%;" />
+
+> 
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318215644139.png" alt="image-20210318215644139" style="zoom:50%;" />
+
+> 计算int c = a + b;   不能在局部变量表中进行，而是要在操作数栈上进行。
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318214532861.png" alt="image-20210318214532861" style="zoom:50%;" />
+
+<img src="/Users/weiliang/Library/Application Support/typora-user-images/image-20210318214714146.png" alt="image-20210318214714146" style="zoom:50%;" />
+
+<img src="/Users/weiliang/Library/Application Support/typora-user-images/image-20210318214857494.png" alt="image-20210318214857494" style="zoom:50%;" />
+
+ <img src="/Users/weiliang/Library/Application Support/typora-user-images/image-20210318214923177.png" alt="image-20210318214923177" style="zoom:50%;" />
+
+> 下面是执行System.out.println(c);
+>
+> 1. get static #4   // 先到运行时常量池中找到成员变量的引用，他是一个System.out，然后到堆中找到它的对象。把对象的引用放入到操作数栈。
+> 2. iload_3    // 打印函数需要的参数c
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318215238746.png" alt="image-20210318215238746" style="zoom:50%;" />
+
+ <img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318215335654.png" alt="image-20210318215335654" style="zoom:50%;" />
+
+> invokevirtual #5 
+>
+> 1. **main栈**的栈顶元素32768，传递给**println栈**的新的栈，放到栈底。
+> 2. println方法执行完成之后，**println栈**弹出，然后把**main栈**中的的两个元素都清除掉。这时候system.out.println(c)就执行完毕。
+> 3. **main栈**也执行完毕，栈帧被清除。
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318215357659.png" alt="image-20210318215357659" style="zoom:50%;" />
+
+
+
+<img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318220640868.png" alt="image-20210318220640868" style="zoom:50%;" />
+
+#完毕
+
