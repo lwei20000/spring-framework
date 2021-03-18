@@ -2,11 +2,23 @@
 
 https://www.bilibili.com/video/BV1V541147WW
 
-javac -parameters -d 。
+> 
+
+> # 使用External Tools反编译字节码
+>
+> <img src="/Users/weiliang/Library/Application Support/typora-user-images/image-20210318134551424.png" alt="image-20210318134551424" style="zoom:33%;" />
+>
+> /Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home
+
+>  # vim 查看16进制字节码
+>
+> Classfile /Users/weiliang/IdeaProjects/spring-framework/my-test/build/classes/java/main/com/test_java/bytecode/HelloWorld.class
+>
+> vim HelloWorld.class
+>
+> :%!xxd -g 1
 
 
-
-/Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home
 
 [toc]
 
@@ -172,6 +184,8 @@ javac -parameters -d 。
 > name_and_typ
 
 
+
+## 附件：例子 - HelloWorld
 
 > 源代码
 
