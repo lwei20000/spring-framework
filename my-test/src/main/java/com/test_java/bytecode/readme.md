@@ -1,8 +1,8 @@
 # Java虚拟机之字节码专题---常量池类型汇总
 
-https://www.bilibili.com/video/BV1V541147WW
-
-> 
+> https://www.bilibili.com/video/BV1V541147WW
+>
+> http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html#jvms-6.5.lcmp
 
 > # 使用External Tools反编译字节码
 >
@@ -371,4 +371,32 @@ https://www.bilibili.com/video/BV1w54y1X7Sq
 <img src="https://cdn.jsdelivr.net/gh/lwei20000/pic/image-20210318220640868.png" alt="image-20210318220640868" style="zoom:50%;" />
 
 #完毕
+
+## 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
