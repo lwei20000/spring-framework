@@ -1,4 +1,4 @@
-package com.test_programmingConcurrencyOnTheJVM;
+package com.test_programmingConcurrencyOnTheJVM.scalabilityAndTreadSafety.coordinating;
 
 import java.io.File;
 import java.util.concurrent.*;
