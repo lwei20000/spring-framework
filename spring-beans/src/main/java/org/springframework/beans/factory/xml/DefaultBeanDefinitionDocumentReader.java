@@ -214,7 +214,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
-			// 对beans标签的处理
+			// 对beans(bean带s)标签的处理
 			doRegisterBeanDefinitions(ele);
 		}
 	}
@@ -331,7 +331,6 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 
 			try {
-
 				// ==========向IoC注册===========
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 
