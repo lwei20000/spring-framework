@@ -545,6 +545,11 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 		int countBefore = getRegistry().getBeanDefinitionCount();
 
 		// 具体的解析过程在registerBeanDefinitions中
+		/** 2024。11。02
+		 * 因为，此处createReaderContext中传入了this。而XmlBeanDefinitionReader的创建的时候传入了beanFactory。
+		 *      因此，documentReader通过createReaderContext拥有了beanFactory的句柄。
+		 * 所以，后面的DefaultBeanDefinitionDocumentReader中通过getReaderContext().getRegistry()可以得到beanFactory。
+		 */
 		documentReader.registerBeanDefinitions(doc, createReaderContext(resource));
 
 		// 记录本次加载的BeanDefinition个数

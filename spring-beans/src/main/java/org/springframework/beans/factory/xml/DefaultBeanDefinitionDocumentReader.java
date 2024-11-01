@@ -209,7 +209,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 		}
 
 		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
-			// 对bean标签的处理（============最重要============）
+			// 对bean标签的处理（***********最重要***********）
 			processBeanDefinition(ele, delegate);
 		}
 
@@ -332,6 +332,12 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 
 			try {
 				// ==========向IoC注册===========
+				/** 2024。11。02
+				 * 因为，在XmlBeanDefinitionReader中，调用documentReader.registerBeanDefinitions(doc, createReaderContext(resource));时候
+				 *      createReaderContext中传入了this。而XmlBeanDefinitionReader的创建的时候传入了beanFactory。
+				 *      因此，documentReader通过createReaderContext拥有了beanFactory的句柄。
+				 * 所以，此处的DefaultBeanDefinitionDocumentReader中通过getReaderContext().getRegistry()可以得到beanFactory。
+				 */
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 
 			} catch (BeanDefinitionStoreException ex) {
