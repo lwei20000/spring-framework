@@ -318,6 +318,14 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				checkMergedBeanDefinition(mbd, beanName, args);
 
 				String[] dependsOn = mbd.getDependsOn();
+
+				/**
+				 * 2024.11.02注意：这里的dependsOn并不是循环依赖。
+				 * 示例：
+				 *     <bean id="A" class=""/>
+				 *     <bean id="B" depends-on="A" class=""/>
+				 * 表达的是B必须在A之后创建
+ 				 */
 				// 若存在依赖则需要递归实例化依赖的bean。
 				if (dependsOn != null) {
 					for (String dep : dependsOn) {
