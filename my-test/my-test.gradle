@@ -6,7 +6,7 @@ dependencies {
     compile(project(":spring-tx"))
     compile(project(":spring-test"))
 
-//    compile(project(":spring-aop"))
+    // compile(project(":spring-aop"))
     compile(project(":spring-aspects"))
 
     // 引入junit包
@@ -33,4 +33,8 @@ dependencies {
     //compile 'org.mybatis:mybatis:3.4.5'
     //compile group: 'org.mybatis', name: 'mybatis', version: '2.3.5'
     //compile group: 'org.mybatis', name: 'mybatis-spring', version: '2.0.6'
+
+    // Akka依赖
+    compile group: 'com.typesafe.akka', name: 'akka-actor_2.10', version: '2.3.6'
+    compile group: 'org.scala-lang', name: 'scala-library', version: '2.10.4'
 }
