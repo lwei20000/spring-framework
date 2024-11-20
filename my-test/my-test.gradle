@@ -1,13 +1,20 @@
 description = "my-test"
 
 dependencies {
-    compile(project(":spring-context"))
-    compile(project(":spring-beans"))
-    compile(project(":spring-tx"))
     compile(project(":spring-test"))
 
-    // compile(project(":spring-aop"))
+    // 第2章：IoC容器的实现
+    compile(project(":spring-context"))
+    compile(project(":spring-beans"))
+
+    // 第3章：Spring AOP的实现
+    compile(project(":spring-aop"))
     compile(project(":spring-aspects"))
+
+    // 第6章：Spring事务处理的实现
+    compile(project(":spring-jdbc")) // JdbcTemplate需要的
+    compile(project(":spring-tx"))   // spring 事务支持
+    compile 'org.apache.tomcat:tomcat-jdbc:8.0.15'
 
     // 引入junit包
     testCompile("junit:junit:4.12")
@@ -22,7 +29,6 @@ dependencies {
     //        它还包括了一个ProxyDriver、一系列内置的JDBC组件库，一个SQL Parser。
     //        支持所有JDBC兼容的数据库
     //------------------------------------------------------------------
-
     // 数据源连接池
     compile 'commons-dbcp:commons-dbcp:1.4'
     compile 'c3p0:c3p0:0.9.1.2'
