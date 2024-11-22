@@ -12,6 +12,7 @@ import org.springframework.aop.support.RegexpMethodPointcutAdvisor;
  */
 public class Test {
 	public static void main(String[] args) {
+
 		// 创建ProxyFactory
 		ITarget target = new ITargetImpl();
 		ProxyFactory pf = new ProxyFactory(target);
