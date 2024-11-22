@@ -1,4 +1,4 @@
-package com.beans;
+package com.test20_ioc.xml;
 
 import java.util.List;
 

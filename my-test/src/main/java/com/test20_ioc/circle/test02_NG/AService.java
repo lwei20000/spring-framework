@@ -1,4 +1,4 @@
-package com.test12_circle.service;
+package com.test20_ioc.circle.test02_NG;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
  */
 @Component("aService")
 public class AService {
+
 	@Autowired
-	//@Resource
 	private BService bService;
 
 	@Async

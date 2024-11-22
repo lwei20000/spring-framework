@@ -1,8 +1,5 @@
-package com.test20_ioc.ann.config;
+package com.test20_ioc.ann;
 
-
-import com.beans.PayService;
-import com.beans.PayServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

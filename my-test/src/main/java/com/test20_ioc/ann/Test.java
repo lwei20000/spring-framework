@@ -1,7 +1,5 @@
 package com.test20_ioc.ann;
 
-import com.test20_ioc.ann.config.AppConfig;
-import com.beans.PayService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
@@ -24,7 +22,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  *   ClassPathBeanDefinitionScanner --- 类路径下的BeanDefinition的扫描器
  *
  */
-public class IocTest {
+public class Test {
 
 	public static void main(String[] args) {
 		// 测试annotation方式取得bean

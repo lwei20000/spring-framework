@@ -1,9 +1,9 @@
-package com.test12_circle;
+package com.test20_ioc.circle.test02_NG;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- * 循环依赖的例子
+ * 容器无法处理的循环依赖
  */
 public class Test {
 	public static void main(String[] args) {

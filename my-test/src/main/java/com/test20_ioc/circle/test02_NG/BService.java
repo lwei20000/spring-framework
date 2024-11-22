@@ -1,4 +1,4 @@
-package com.test12_circle.service;
+package com.test20_ioc.circle.test02_NG;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 @Component("bService")
 public class BService {
 	@Autowired
-	//@Resource
 	private AService aService;
 
 	public void testB() {

@@ -1,13 +1,12 @@
 package com.test20_ioc.xml;
 
-import com.beans.Teacher;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * 梁威测试文件(lw)
  */
-public class IocTest {
+public class Test {
 
 	public static void main(String[] args) {
 
