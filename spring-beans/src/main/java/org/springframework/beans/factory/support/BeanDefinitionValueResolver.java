@@ -110,6 +110,8 @@ class BeanDefinitionValueResolver {
 		// to another bean to be resolved.
 		if (value instanceof RuntimeBeanReference) {
 			RuntimeBeanReference ref = (RuntimeBeanReference) value;
+
+			// 对bean reference的解析
 			return resolveReference(argName, ref);
 		}
 		else if (value instanceof RuntimeBeanNameReference) {
@@ -145,7 +147,7 @@ class BeanDefinitionValueResolver {
 			return result;
 		}
 		else if (value instanceof ManagedArray) {
-			// May need to resolve contained runtime references.
+			// 对Array的解析
 			ManagedArray array = (ManagedArray) value;
 			Class<?> elementType = array.resolvedElementType;
 			if (elementType == null) {
@@ -166,18 +168,20 @@ class BeanDefinitionValueResolver {
 					elementType = Object.class;
 				}
 			}
+
+			// 对Array的解析
 			return resolveManagedArray(argName, (List<?>) value, elementType);
 		}
 		else if (value instanceof ManagedList) {
-			// May need to resolve contained runtime references.
+			// 对List的解析
 			return resolveManagedList(argName, (List<?>) value);
 		}
 		else if (value instanceof ManagedSet) {
-			// May need to resolve contained runtime references.
+			// 对Set的解析
 			return resolveManagedSet(argName, (Set<?>) value);
 		}
 		else if (value instanceof ManagedMap) {
-			// May need to resolve contained runtime references.
+			// 对Map的解析
 			return resolveManagedMap(argName, (Map<?, ?>) value);
 		}
 		else if (value instanceof ManagedProperties) {
@@ -297,6 +301,7 @@ class BeanDefinitionValueResolver {
 
 	/**
 	 * Resolve a reference to another bean in the factory.
+	 * 解析一个引用
 	 */
 	@Nullable
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {

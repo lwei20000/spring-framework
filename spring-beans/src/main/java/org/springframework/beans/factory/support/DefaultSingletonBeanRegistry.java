@@ -250,7 +250,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					this.suppressedExceptions = new LinkedHashSet<>();
 				}
 				try {
-					// singletonFactory 生成bean
+					// singletonFactory生成bean >>>>>>> 调用createBean()方法生成。
 					singletonObject = singletonFactory.getObject();
 					// 标记置为true
 					newSingleton = true;
@@ -279,9 +279,9 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				}
 
 				// bean创建完成之后，放入单例对象池中。
-				// this.singletonObjects.put(beanName, singletonObject);
-				// this.singletonFactories.remove(beanName);
-				// this.earlySingletonObjects.remove(beanName);
+				// 一级缓存，添加this.singletonObjects.put(beanName, singletonObject);
+				// 二级缓存，删除：this.earlySingletonObjects.remove(beanName);
+				// 三级缓存。删除：this.singletonFactories.remove(beanName);
 				// this.registeredSingletons.add(beanName);
 				if (newSingleton) {
 					addSingleton(beanName, singletonObject);

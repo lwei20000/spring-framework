@@ -98,11 +98,14 @@ public class ProxyCreatorSupport extends AdvisedSupport {
 	 * Subclasses should call this to get a new AOP proxy. They should <b>not</b>
 	 * create an AOP proxy with {@code this} as an argument.
 	 */
+	/**调用createAopProxy()方法来生成Proxy对象，这个方法在ProxyFactory的基类ProxyCreatorSupport中实现**/
 	protected final synchronized AopProxy createAopProxy() {
 		if (!this.active) {
 			activate();
 		}
 
+		// 这里使用DefaultAopProxyFactory来创建AopProxy
+		/**因为这个ProxyFactory类本身就是ProxyConfig的子类，所以这里创建AopProxy的过程和一般Proxy代理的创建过程是一样的*/
 		// 通过AopProxyFactory取得AopProxy，这个AopProxyFactory是在初始化函数中定义的，使用的是DefaultAopProxyFactory
 		return getAopProxyFactory().createAopProxy(this);
 	}

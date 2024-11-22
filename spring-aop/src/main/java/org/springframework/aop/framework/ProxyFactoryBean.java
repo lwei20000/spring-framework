@@ -252,13 +252,16 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	@Override
 	@Nullable
 	public Object getObject() throws BeansException {
+
 		// 这里初始化通知器链
 		initializeAdvisorChain();
+
 		// 这里对singleton和prototype进行区分，生成对应的proxy
 		if (isSingleton()) {
+			// singleton
 			return getSingletonInstance();
-		}
-		else {
+		} else {
+			// prototype
 			if (this.targetName == null) {
 				logger.info("Using non-singleton proxies with singleton targets is often undesirable. " +
 						"Enable prototype proxies by setting the 'targetName' property.");
@@ -447,6 +450,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 			return;
 		}
 
+		// this.interceptorNames是IOC容器根据XML文件属性注入进来的
 		if (!ObjectUtils.isEmpty(this.interceptorNames)) {
 			if (this.beanFactory == null) {
 				throw new IllegalStateException("No BeanFactory available anymore (probably due to serialization) " +
@@ -479,6 +483,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 					// We must check if it's a singleton or prototype.
 					Object advice;
 					if (this.singleton || this.beanFactory.isSingleton(name)) {
+
+						// 此处可以调用IoC容器的原因就是本类实现了BeanFacotryAware接口。
+						// 在容器出事话的时候会把容器设置到this.beanFactory中。所以此处可以获得this.beanFactory。
 						// Add the real Advisor/Advice to the chain.
 						advice = this.beanFactory.getBean(name);
 					}

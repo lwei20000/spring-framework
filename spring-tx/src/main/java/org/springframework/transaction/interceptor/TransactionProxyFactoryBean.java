@@ -115,6 +115,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBean
 		implements BeanFactoryAware {
 
+	/**这个拦截器TransactionInterceptor通过AOP发挥作用，通过这个拦截器的实现，Spring封装了事务处理的实现，关于它的具体实现，下面会详细分析 20241121 **/
 	private final TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
 
 	@Nullable
@@ -126,6 +127,7 @@ public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBe
 	 * transaction management: This class is just a way of invoking it.
 	 * @see TransactionInterceptor#setTransactionManager
 	 */
+	/**通过依赖注入的PlatformTransactionManager**/
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {
 		this.transactionInterceptor.setTransactionManager(transactionManager);
 	}
@@ -143,6 +145,7 @@ public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBe
 	 * @see TransactionAttributeEditor
 	 * @see NameMatchTransactionAttributeSource
 	 */
+	/**通过依赖注入的事务属性以Properties的形式出现，把从BeanDefinitio中读到的事务管理的属性信息注入到TransactionInterceptor**/
 	public void setTransactionAttributes(Properties transactionAttributes) {
 		this.transactionInterceptor.setTransactionAttributes(transactionAttributes);
 	}
@@ -189,11 +192,10 @@ public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBe
 	/**
 	 * Creates an advisor for this FactoryBean's TransactionInterceptor.
 	 */
+	/**这里创建Spring AOP对事务处理的Advisor*/
 	@Override
 	protected Object createMainInterceptor() {
-		// 这是Spring事务处理完成AOP配置的地方
-		// 在afterPropertiesSet中，可以看到为ProxyFactory生成代理对象、配置通知器、设置代理接口方法等。
-		// 这儿调用的是AbstractSingletonProxyFactoryBean.afterPropertiesSet()
+
 		this.transactionInterceptor.afterPropertiesSet();
 
 		if (this.pointcut != null) {
@@ -201,8 +203,7 @@ public class TransactionProxyFactoryBean extends AbstractSingletonProxyFactoryBe
 			return new DefaultPointcutAdvisor(this.pointcut, this.transactionInterceptor);
 		}
 		else {
-			// Rely on default pointcut.
-			// 如果没有直至pointcut，使用TransactionAttributeSourceAdvisor作为通知器，并为通知器设置拦截器
+			// 如果没有配置pointcut，使用TransactionAttributeSourceAdvisor作为通知器，并为通知器设置TransactionInterceptor作为拦截器
 			return new TransactionAttributeSourceAdvisor(this.transactionInterceptor);
 		}
 	}

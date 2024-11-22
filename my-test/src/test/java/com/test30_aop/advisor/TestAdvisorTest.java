@@ -1,4 +1,4 @@
-package com.test21_aop.aspect;
+package com.test30_aop.advisor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @Description:
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath*:com/aop/aspect/applicationContext.xml"})
-public class TestAspectTest {
+@ContextConfiguration(locations = {"classpath*:com/aop/advisor/applicationContext.xml"})
+public class TestAdvisorTest {
 
 	@Autowired
 	public TestPoint testPoint;

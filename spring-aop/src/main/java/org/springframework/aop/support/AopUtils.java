@@ -354,6 +354,8 @@ public abstract class AopUtils {
 			throws Throwable {
 
 		// Use reflection to invoke the method.
+		// 这里是使用反射调用target对象方法的地方
+		// 这里的method.invoke()方法也是JDK的常规代理实现方法。
 		try {
 			ReflectionUtils.makeAccessible(method);
 			return method.invoke(target, args);

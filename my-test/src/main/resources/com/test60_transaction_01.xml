@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- 使用C3P0数据库连接池作为数据源 -->
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/springCloudTestDB?autoReconnect=true" />
+		<property name="username" value="root" />
+		<property name="password" value="111111.qq" />
+		<property name="initialSize" value="5" />
+		<property name="maxActive" value="10" />
+		<property name="maxIdle" value="5" />
+		<property name="minIdle" value="2" />
+	</bean>
+
+	<!-- 配置JDBC数据源的局部事务管理器，使用DataSourceTransactionManager类，该类实现了
+	PlatformTransactionManager接口，是针对采用数据源连接的特定实现 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 配置TransactionManager时需要注入数据源引用 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 下面这个是前面定义的业务Bean -->
+	<bean id="newsDao" class="com.test60_transaction.xml.NewsDaoImpl">
+		<!-- 为业务Bean注入属性 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="newsDaoTransProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<!-- 为事务代理工厂Bean注入事务管理器 -->
+		<property name="transactionManager" ref="transactionManager" />
+		<!-- 要在哪个Bean上面创建事务代理对象 -->
+		<property name="target" ref="newsDao" />
+		<!-- 指定事务属性 -->
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>
