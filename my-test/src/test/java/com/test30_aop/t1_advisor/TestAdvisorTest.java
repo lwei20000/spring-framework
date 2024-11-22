@@ -1,4 +1,4 @@
-package com.test30_aop.advisor;
+package com.test30_aop.t1_advisor;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

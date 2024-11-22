@@ -8,8 +8,6 @@ import org.springframework.beans.factory.ListableBeanFactory;
  * @Description:
  */
 public class ACUtils {
-
-
 	/**
 	 * 打印所有的beanDefinition定义
 	 * @param lbf
