@@ -22,7 +22,7 @@
 	</bean>
 
 	<!-- 下面这个是前面定义的业务Bean -->
-	<bean id="newsDao" class="com.test60_transaction.xml.NewsDaoImpl">
+	<bean id="newsDao" class="com.test60_transaction.t4_xml.NewsDaoImpl">
 		<!-- 为业务Bean注入属性 -->
 		<property name="dataSource" ref="dataSource" />
 	</bean>

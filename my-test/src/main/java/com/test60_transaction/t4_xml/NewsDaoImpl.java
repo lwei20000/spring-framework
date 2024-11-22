@@ -1,4 +1,4 @@
-package com.test60_transaction.xml;
+package com.test60_transaction.t4_xml;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -18,8 +18,8 @@ public class NewsDaoImpl implements NewsDao {
 
 	public void insert(String title, String content) {
 		JdbcTemplate template = new JdbcTemplate(dataSource);
-		template.update("insert into news_table values ('新闻标题1','内容1')");
+		template.update("insert into t_news values ('新闻标题1','内容1')");
 		//两次相同的操作，将违反主键约束
-		template.update("insert into news_table values ('新闻标题2','内容2')");
+		template.update("insert into t_news values ('新闻标题2','内容2')");
 	}
 }
