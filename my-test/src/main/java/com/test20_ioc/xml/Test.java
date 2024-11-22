@@ -13,7 +13,7 @@ public class Test {
 		// =============================================================================================================
 		// 案例一：容器的功能扩展
 		// =============================================================================================================
-		ApplicationContext ac = new ClassPathXmlApplicationContext("com/spring-student.xml");
+		ApplicationContext ac = new ClassPathXmlApplicationContext("com/test20_ioc_xml.xml");
 		// 【二、从ApplicationContext中取得bean】
 		Teacher teacher = (Teacher) ac.getBean("teacher");
 		System.out.println("=====================" + teacher);
@@ -30,7 +30,7 @@ public class Test {
 		// =============================================================================================================
 		// 案例二：容器的基本实现
 		// =============================================================================================================
-//		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("com/spring-student.xml"));
+//		BeanFactory bf = new XmlBeanFactory(new ClassPathResource("com/test20_ioc_xml.xml"));
 //		Teacher teacher2 = (Teacher) bf.getBean("teacher");
 //		System.out.println("=====================" + teacher2);
 
