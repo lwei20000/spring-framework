@@ -1,4 +1,4 @@
-package com.test20_ioc.xml;
+package com.test20_ioc.t2_xml;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

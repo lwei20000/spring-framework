@@ -1,4 +1,4 @@
-package com.test20_ioc.ann;
+package com.test20_ioc.t1_ann;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

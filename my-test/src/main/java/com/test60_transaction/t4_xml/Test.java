@@ -11,7 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class Test {
 	public static void main(String[] arg) {
-		ApplicationContext context = new ClassPathXmlApplicationContext("com/test60_transaction_01.xml");
+		ApplicationContext context = new ClassPathXmlApplicationContext("com/test60_transaction_t4.xml");
 		NewsDao dao = context.getBean("newsDaoTransProxy",NewsDao.class);
 		dao.insert("新闻标题","新闻内容");
 	}

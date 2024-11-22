@@ -1,4 +1,4 @@
-package com.test20_ioc.circle.test02_NG;
+package com.test20_ioc.t3_circle.test02_NG;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

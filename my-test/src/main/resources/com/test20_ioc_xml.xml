@@ -3,10 +3,10 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<!--老师bean-->
-	<bean id="teacher" class="com.test20_ioc.xml.Teacher">
+	<bean id="teacher" class="com.test20_ioc.t2_xml.Teacher">
 		<property name="student" ref="student"/>
 	</bean>
 
 	<!--学生bean-->
-	<bean id="student" class="com.test20_ioc.xml.Student"></bean> <!-- 必须要默认构造器 -->
+	<bean id="student" class="com.test20_ioc.t2_xml.Student"></bean> <!-- 必须要默认构造器 -->
 </beans>
