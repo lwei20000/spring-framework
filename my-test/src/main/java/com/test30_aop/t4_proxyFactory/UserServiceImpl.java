@@ -1,4 +1,4 @@
-package com.test30_aop.springaoptest;
+package com.test30_aop.t4_proxyFactory;
 
 /**
  * @Auther: weiliang

@@ -1,4 +1,4 @@
-package com.test30_aop.d2_proxy;
+package com.test30_aop.t2_proxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

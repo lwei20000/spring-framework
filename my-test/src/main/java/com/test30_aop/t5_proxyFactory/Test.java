@@ -1,4 +1,4 @@
-package com.test30_aop.d101;
+package com.test30_aop.t5_proxyFactory;
 
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.aop.framework.ProxyFactory;
@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
  */
 public class Test {
 	public static void main(String[] args) {
+
 		TargetImpl target = new TargetImpl();
 
 		ProxyFactory aopFactory = new ProxyFactory(target);

@@ -1,4 +1,4 @@
-package com.test30_aop.d2_proxy;
+package com.test30_aop.t2_proxy;
 
 /**
  * @Auther: weiliang

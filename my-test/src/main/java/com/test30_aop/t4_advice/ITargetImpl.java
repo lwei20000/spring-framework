@@ -1,6 +1,7 @@
-package com.test30_aop.aoptest;
+package com.test30_aop.t4_advice;
 
 /**
+ * 目标的实现
  * @Auther: weiliang
  * @Date: 2020/12/15 10:04
  * @Description:

@@ -1,4 +1,4 @@
-package com.test30_aop.d101;
+package com.test30_aop.t5_proxyFactory;
 
 /**
  * @Auther: weiliang

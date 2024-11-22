@@ -1,4 +1,4 @@
-package com.test30_aop.d1_reflect;
+package com.test30_aop.t1_reflect;
 
 import java.lang.annotation.ElementType;
 
@@ -18,16 +18,16 @@ public class Test01 {
 		User user = new User();
 
 		// 问题01：一个类在内存中只有一个Class对象
-		Class c1 = Class.forName("com.test30_aop.d1_reflect.User");
-		Class c2 = Class.forName("com.test30_aop.d1_reflect.User");
-		Class c3 = Class.forName("com.test30_aop.d1_reflect.User");
+		Class c1 = Class.forName("com.test30_aop.t1_reflect.User");
+		Class c2 = Class.forName("com.test30_aop.t1_reflect.User");
+		Class c3 = Class.forName("com.test30_aop.t1_reflect.User");
 		System.out.println(c1.hashCode());
 		System.out.println(c2.hashCode());
 		System.out.println(c3.hashCode());
 
 		// 问题02：几种获取Class对象的方法：
 		Class c4 = user.getClass();  // 方式1：通过实例获取Class对象
-		Class c5 = Class.forName("com.test30_aop.d1_reflect.User");  // 方式2：通过Class.forName("")
+		Class c5 = Class.forName("com.test30_aop.t1_reflect.User");  // 方式2：通过Class.forName("")
 		Class c6 = User.class; // 方式3：通过User.class获取
 		Class c7 = Integer.class; // 方式3：基本内置类型的包装类都有一个TYPE属性
 		Class c8 = Integer.TYPE; // 方式4：基本内置类型的包装类都有一个TYPE属性

@@ -1,4 +1,4 @@
-package com.test30_aop.springaoptest;
+package com.test30_aop.t4_proxyFactory;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

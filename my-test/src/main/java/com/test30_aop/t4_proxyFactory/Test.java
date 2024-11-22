@@ -1,4 +1,4 @@
-package com.test30_aop.springaoptest;
+package com.test30_aop.t4_proxyFactory;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.framework.ProxyFactory;
@@ -7,7 +7,7 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 /**
  * 梁威测试文件(lw)
  */
-public class IocTest {
+public class Test {
 
 	public static void main(String[] args) {
 		//1.初始化源对象(一定要实现接口)

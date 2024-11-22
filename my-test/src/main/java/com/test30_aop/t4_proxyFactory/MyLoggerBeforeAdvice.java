@@ -1,4 +1,4 @@
-package com.test30_aop.aoptest;
+package com.test30_aop.t4_proxyFactory;
 
 import org.springframework.aop.MethodBeforeAdvice;
 
@@ -6,12 +6,12 @@ import java.lang.reflect.Method;
 
 /**
  * @Auther: weiliang
- * @Date: 2020/12/15 10:03
+ * @Date: 2020/12/14 10:09
  * @Description:
  */
-public class MyBeforeAdvice implements MethodBeforeAdvice {
+public class MyLoggerBeforeAdvice implements MethodBeforeAdvice {
 	@Override
 	public void before(Method method, Object[] args, Object target) throws Throwable {
-		System.out.println("before say");
+		System.out.println("=======保存更新日志=========");
 	}
 }
