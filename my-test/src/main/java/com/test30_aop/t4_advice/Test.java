@@ -17,15 +17,15 @@ public class Test {
 		ITarget target = new ITargetImpl();
 		ProxyFactory pf = new ProxyFactory(target);
 
-		// 新建两个通知，表明在什么时机切入
+		// 通知Advice：表明在什么时机切入
 		Advice afterReturningAdvice = new MyAfterReturningAdvice();
 		Advice beforeAdvice = new MyBeforeAdvice();
 
-		// Advisor包含Pointcut和Advice，叫通知器，这里就设置了切点pointcut
+		// 通知器Advisor：包含切点Pointcut和通知Advice（从名字上看可知：RegexpMethodPointcutAdvisor用到的是一种基于正则表达式形式的Pointcut）
 		RegexpMethodPointcutAdvisor regexpAdvisor1 = new RegexpMethodPointcutAdvisor();
 		regexpAdvisor1.setPattern("com.test30_aop.t4_advice.ITargetImpl.say()");
 		regexpAdvisor1.setAdvice(afterReturningAdvice);
-
+		//
 		RegexpMethodPointcutAdvisor regexpAdvisor2 = new RegexpMethodPointcutAdvisor();
 		regexpAdvisor2.setPattern("com.test30_aop.t4_advice.ITargetImpl.say()");
 		regexpAdvisor2.setAdvice(beforeAdvice);

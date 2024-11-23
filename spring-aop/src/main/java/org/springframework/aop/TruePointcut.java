@@ -28,6 +28,9 @@ final class TruePointcut implements Pointcut, Serializable {
 
 	public static final TruePointcut INSTANCE = new TruePointcut();
 
+	// 这里是单件模式的实现特点，设置私有的构造函数，使其不能被实例化
+	// 并设置一个静态的类变量来保持其是唯一的。
+
 	/**
 	 * Enforce Singleton pattern.
 	 */
@@ -39,6 +42,8 @@ final class TruePointcut implements Pointcut, Serializable {
 		return ClassFilter.TRUE;
 	}
 
+
+	// MethodMatcher.TRUE同本类一样，也是一个单件模式的实现。
 	@Override
 	public MethodMatcher getMethodMatcher() {
 		return MethodMatcher.TRUE;
